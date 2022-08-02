@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/hoppang/purpleeye/issues"
   },
-  "homepage": "https://github.com/hoppang/purpleeye#readme"
+  "homepage": "https://github.com/hoppang/purpleeye#readme",
+  "devDependencies": {
+    "electron": "^20.0.0"
+  }
 }
