@@ -1,0 +1,23 @@
+{
+  "name": "purpleeye",
+  "version": "1.0.0",
+  "description": "image viewer supports cbz, made with electron",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoppang/purpleeye.git"
+  },
+  "author": "Bohun Kim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hoppang/purpleeye/issues"
+  },
+  "homepage": "https://github.com/hoppang/purpleeye#readme",
+  "devDependencies": {
+    "electron": "^20.0.0"
+  }
+}
