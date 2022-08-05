@@ -1,0 +1,22 @@
+name: Electron CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    container:
+      image: node:latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: tsc
