@@ -24,3 +24,5 @@ jobs:
            | echo "test"
     - name: Build
       run: tsc
+    - name: lint
+      run: npm run lint
