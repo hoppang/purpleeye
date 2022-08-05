@@ -9,25 +9,25 @@ const createWindow = (pageName: string, fileName: string) => {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-        }
-    })
+        },
+    });
 
     win.loadFile('view/' + pageName + '.html');
-    win.webContents.once("did-finish-load", () => {
-        if(pageName == "viewer") {
-            log.info("send loadImage message to renderer: " + fileName);
-            win.webContents.send("load_image", fileName);
+    win.webContents.once('did-finish-load', () => {
+        if (pageName == 'viewer') {
+            log.info('send loadImage message to renderer: ' + fileName);
+            win.webContents.send('load_image', fileName);
         }
     });
-}
+};
 
 app.whenReady().then(() => {
-    log.info("arguments: " + process.argv);
+    log.info('arguments: ' + process.argv);
     if (process.argv.length == 3) {
-        log.info("load viewer page");
-        createWindow("viewer", process.argv[2]);
+        log.info('load viewer page');
+        createWindow('viewer', process.argv[2]);
     } else {
-        log.info("load index page");
-        createWindow("index", "test");
+        log.info('load index page');
+        createWindow('index', 'test');
     }
-})
+});
