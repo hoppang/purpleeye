@@ -50,6 +50,6 @@ function send_ls() {
             elements.push(items[i]);
         }
 
-        win.webContents.send('ls', elements);
+        win.webContents.send('ls', { cwd, elements });
     });
 }
