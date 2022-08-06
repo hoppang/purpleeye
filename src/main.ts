@@ -26,3 +26,8 @@ ipcMain.on('view', (_event, filepath: string) => {
     log.info('view ' + filepath);
     browser.loadViewerPage(filepath);
 });
+
+ipcMain.on('backToBrowser', (_event) => {
+    log.info('back to browser main');
+    browser.loadIndexPage();
+});
