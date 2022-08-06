@@ -1,33 +1,33 @@
-import { app, BrowserWindow } from 'electron';
+import { app, ipcMain } from 'electron';
 import log from 'electron-log';
+import { Browser } from './browser';
 
-const createWindow = (pageName: string, fileName: string) => {
-    const win = new BrowserWindow({
-        width: 800,
-        height: 600,
-        // hack for 'require is not defined'
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
-        },
-    });
-
-    win.loadFile('view/' + pageName + '.html');
-    win.webContents.once('did-finish-load', () => {
-        if (pageName == 'viewer') {
-            log.info('send loadImage message to renderer: ' + fileName);
-            win.webContents.send('load_image', fileName);
-        }
-    });
-};
+let browser: Browser;
 
 app.whenReady().then(() => {
     log.info('arguments: ' + process.argv);
+    browser = new Browser();
+
     if (process.argv.length == 3) {
         log.info('load viewer page');
-        createWindow('viewer', process.argv[2]);
+        browser.loadViewerPage(process.argv[2]);
     } else {
         log.info('load index page');
-        createWindow('index', 'test');
+        browser.loadIndexPage();
     }
+});
+
+ipcMain.on('cd', (_event, dirname: string) => {
+    log.info('cd to ' + dirname);
+    browser.chdir(dirname);
+});
+
+ipcMain.on('view', (_event, filepath: string) => {
+    log.info('view ' + filepath);
+    browser.loadViewerPage(filepath);
+});
+
+ipcMain.on('backToBrowser', (_event: Electron.Event) => {
+    log.info('back to browser main');
+    browser.loadIndexPage();
 });
