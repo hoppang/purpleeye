@@ -54,11 +54,15 @@ class Browser {
             const filename = files[i];
 
             const is_dir = fs.statSync(path + '/' + filename).isDirectory();
-            if (is_dir == true || this.is_image(filename)) {
+            if ((is_dir == true || this.is_image(filename)) && !this.is_hidden(filename)) {
                 result.push({ name: filename, isDirectory: is_dir });
             }
         }
         return result;
+    }
+
+    private is_hidden(filename: string): boolean {
+        return filename.startsWith('.');
     }
 
     private is_image(path: string): boolean {
