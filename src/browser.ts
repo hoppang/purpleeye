@@ -1,3 +1,5 @@
+import { BrowserWindow } from 'electron';
+import log from 'electron-log';
 import fs from 'fs';
 
 type FileEntry = {
@@ -6,7 +8,45 @@ type FileEntry = {
 };
 
 class Browser {
-    ls(path: string): Array<FileEntry> {
+    private win: BrowserWindow;
+
+    constructor() {
+        this.win = new BrowserWindow({
+            width: 800,
+            height: 600,
+            // hack for 'require is not defined'
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false,
+            },
+        });
+    }
+
+    loadIndexPage(): void {
+        this.win.loadFile('view/index.html');
+        this.win.webContents.once('did-finish-load', () => {
+            const cwd = process.cwd();
+            const list = this.ls(cwd);
+            this.win.webContents.send('ls', { cwd, elements: list });
+        });
+    }
+
+    loadViewerPage(filePath: string): void {
+        this.win.loadFile('view/viewer.html');
+        this.win.webContents.once('did-finish-load', () => {
+            log.info('send loadImage message to renderer: ' + filePath);
+            this.win.webContents.send('load_image', filePath);
+        });
+    }
+
+    chdir(newdir: string) {
+        process.chdir(newdir);
+        const cwd = process.cwd();
+        const list = this.ls(cwd);
+        this.win.webContents.send('ls', { cwd, elements: list });
+    }
+
+    private ls(path: string): Array<FileEntry> {
         const files = fs.readdirSync(path);
         const result = new Array<FileEntry>();
 
@@ -21,7 +61,7 @@ class Browser {
         return result;
     }
 
-    is_image(path: string): boolean {
+    private is_image(path: string): boolean {
         const extension = path.split('.').pop();
 
         switch (extension?.toLowerCase()) {
