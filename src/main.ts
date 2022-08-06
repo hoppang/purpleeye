@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import log from 'electron-log';
 import { Browser } from './browser';
 
@@ -46,3 +46,9 @@ function send_ls() {
     const list = browser.ls(cwd);
     win.webContents.send('ls', { cwd, elements: list });
 }
+
+ipcMain.on('cd', (_event, dirname: string) => {
+    log.info('cd to ' + dirname);
+    process.chdir(dirname);
+    send_ls();
+});
