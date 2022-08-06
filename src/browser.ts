@@ -12,10 +12,25 @@ class Browser {
 
         for (let i = 0; i < files.length; i++) {
             const filename = files[i];
+
             const is_dir = fs.statSync(path + '/' + filename).isDirectory();
-            result.push({ name: filename, isDirectory: is_dir });
+            if (is_dir == true || this.is_image(filename)) {
+                result.push({ name: filename, isDirectory: is_dir });
+            }
         }
         return result;
+    }
+
+    is_image(path: string): boolean {
+        const extension = path.split('.').pop();
+
+        switch (extension?.toLowerCase()) {
+            case 'jpg':
+            case 'jpeg':
+                return true;
+            default:
+                return false;
+        }
     }
 }
 
