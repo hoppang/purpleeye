@@ -1,4 +1,4 @@
-sorry for english users, this project is written in KR. 😭
+I'm sorry, this project is written in KR. 😭
 
 # purpleeye
 Image viewer supports cbz, made with electron
@@ -14,3 +14,4 @@ npm install -g typescript
 npm install
 npm start
 ```
+
