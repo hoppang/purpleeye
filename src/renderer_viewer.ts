@@ -8,6 +8,6 @@ ipcRenderer.on('load_image', (_event, fileName) => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function backToBrowser(): void {
-    log.info("back to browser renderer");
+    log.info('back to browser renderer');
     ipcRenderer.send('backToBrowser');
 }

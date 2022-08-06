@@ -27,7 +27,7 @@ ipcMain.on('view', (_event, filepath: string) => {
     browser.loadViewerPage(filepath);
 });
 
-ipcMain.on('backToBrowser', (_event) => {
+ipcMain.on('backToBrowser', (_event: Electron.Event) => {
     log.info('back to browser main');
     browser.loadIndexPage();
 });
