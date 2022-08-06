@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import log from 'electron-log';
-import fs from 'fs';
+import { Browser } from './browser';
 
 let win: BrowserWindow;
 
@@ -42,14 +42,7 @@ function send_ls() {
     const cwd = process.cwd();
     log.info('cwd = ' + cwd);
 
-    fs.readdir(cwd, function (_err: Error | null, items: string[]) {
-        log.info('err = ' + _err);
-        const elements = new Array<string>();
-
-        for (let i = 0; i < items.length; i++) {
-            elements.push(items[i]);
-        }
-
-        win.webContents.send('ls', { cwd, elements });
-    });
+    const browser = new Browser();
+    const list = browser.ls(cwd);
+    win.webContents.send('ls', { cwd, elements: list });
 }

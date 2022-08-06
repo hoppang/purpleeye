@@ -1,12 +1,17 @@
 import { ipcRenderer } from 'electron';
+import { FileEntry } from './browser';
 
-ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: Array<string> }) {
+ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: Array<FileEntry> }) {
     const cwd = data.cwd;
-    const list = Array.from(data.elements);
-    let str = '<table style="border: 2px;">';
+    const elements = data.elements;
 
-    for (let i = 0; i < list.length; i++) {
-        str = str.concat('<tr><td>' + list[i] + '</td></tr>');
+    let str = '<table style="border: 2px;">';
+    for (let i = 0; i < elements.length; i++) {
+        if (elements[i].isDirectory) {
+            str = str.concat('<tr><td><b>DIR</b> ' + elements[i].name + '</td></tr>');
+        } else {
+            str = str.concat('<tr><td>' + elements[i].name + '</td></tr>');
+        }
     }
 
     str = str.concat('</table>');
