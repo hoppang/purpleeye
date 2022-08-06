@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 import { FileEntry } from './browser';
 import util from 'util';
+import path from 'path';
 
 ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: Array<FileEntry> }) {
     const cwd = data.cwd;
@@ -19,7 +20,13 @@ ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: Array<File
                 elements[i].name,
             );
         } else {
-            str = str.concat('<tr><td>' + elements[i].name + '</td></tr>');
+            str = util.format(
+                '%s\n<tr><td><a href="#" onclick="view(\'%s\', \'%s\');">%s</a></td></tr>',
+                str,
+                cwd,
+                elements[i].name,
+                elements[i].name,
+            );
         }
     }
 
@@ -32,10 +39,12 @@ ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: Array<File
     content.innerHTML = str;
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function changeDir(dirname: string) {
     ipcRenderer.send('cd', dirname);
 }
 
-// 사실 밖에서 안 쓰지만, no-unused-var 에러를 방지하기 위해 작성함.
-// eslint directive comment가 먹히지 않는 이유를 모르겠음.
-export { changeDir };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function view(cwd: string, filename: string) {
+    ipcRenderer.send('view', path.join(cwd, filename));
+}

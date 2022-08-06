@@ -52,3 +52,12 @@ ipcMain.on('cd', (_event, dirname: string) => {
     process.chdir(dirname);
     send_ls();
 });
+
+ipcMain.on('view', (_event, filepath: string) => {
+    log.info('view ' + filepath);
+    win.loadFile('view/viewer.html');
+    win.webContents.once('did-finish-load', () => {
+        log.info('send loadImage message to renderer: ' + filepath);
+        win.webContents.send('load_image', filepath);
+    });
+});
