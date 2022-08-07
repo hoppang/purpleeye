@@ -6,8 +6,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
-    "lint-fix": "eslint src/**/*.ts --fix",
-    "format": "js-beautify src/* && js-beautify --type html view/*",
+    "format": "eslint src/**/*.ts --fix && js-beautify --type html view/*",
     "test": "npx jest",
     "start": "tsc && electron ."
   },
