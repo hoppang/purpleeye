@@ -48,6 +48,10 @@ class Browser {
         this.win.webContents.send('ls', { cwd, elements: list });
     }
 
+    toggleFullscreen(): void {
+        this.win.setFullScreen(!this.win.fullScreen);
+    }
+
     quit() {
         this.win.close();
     }

@@ -16,3 +16,7 @@ function quit(): void {
     log.info('quit application');
     ipcRenderer.send('quit');
 }
+
+function toggleFullscreen(): void {
+    ipcRenderer.send('toggleFullscreen');
+}
