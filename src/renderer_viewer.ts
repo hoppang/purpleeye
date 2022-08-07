@@ -12,11 +12,13 @@ function backToBrowser(): void {
     ipcRenderer.send('backToBrowser');
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function quit(): void {
     log.info('quit application');
     ipcRenderer.send('quit');
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function toggleFullscreen(): void {
     ipcRenderer.send('toggleFullscreen');
 }
