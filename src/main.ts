@@ -31,3 +31,7 @@ ipcMain.on('backToBrowser', (_event: Electron.Event) => {
     log.info('back to browser main');
     browser.loadIndexPage();
 });
+
+ipcMain.on('quit', (_event: Electron.Event) => {
+    browser.quit();
+});

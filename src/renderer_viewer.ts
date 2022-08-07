@@ -11,3 +11,8 @@ function backToBrowser(): void {
     log.info('back to browser renderer');
     ipcRenderer.send('backToBrowser');
 }
+
+function quit(): void {
+    log.info('quit application');
+    ipcRenderer.send('quit');
+}

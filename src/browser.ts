@@ -48,6 +48,10 @@ class Browser {
         this.win.webContents.send('ls', { cwd, elements: list });
     }
 
+    quit() {
+        this.win.close();
+    }
+
     private ls(path: string): Array<FileEntry> {
         const files = fs.readdirSync(path);
         const result = new Array<FileEntry>();
