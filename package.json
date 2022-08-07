@@ -8,7 +8,7 @@
     "lint": "eslint src/**/*.ts",
     "lint-fix": "eslint src/**/*.ts --fix",
     "format": "prettier --write 'src/**/*.ts'",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx jest",
     "start": "tsc && electron ."
   },
   "repository": {
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/hoppang/purpleeye#readme",
   "devDependencies": {
+    "@types/jest": "^28.1.6",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
     "electron": "^20.0.1",

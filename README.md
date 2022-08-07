@@ -7,7 +7,7 @@ Target platform: macos / linux
 
 Windows could be supported, but not guaranteed.
 
-## run dev version
+## Run dev version
 
 ```
 npm install -g typescript
@@ -15,3 +15,8 @@ npm install
 npm start
 ```
 
+## Run unit tests
+
+```
+npm test
+```
