@@ -14,6 +14,8 @@ class Browser {
         this.win = new BrowserWindow({
             width: 800,
             height: 600,
+            minWidth: 800,
+            minHeight: 600,
             // hack for 'require is not defined'
             webPreferences: {
                 nodeIntegration: true,
