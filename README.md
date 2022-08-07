@@ -1,4 +1,4 @@
-I'm sorry, this project is written in KR. 😭
+This project is written in KR. 😭
 
 # purpleeye
 Image viewer supports cbz, made with electron
