@@ -5,7 +5,19 @@ html, body {
     padding: 0;
 }
 
-img.main {
+div#img-container {
+    position:relative;
+    height: 100%;
+    width:100%;
+}
+
+div#img-container img {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    margin:auto;
     max-width: 100%;
     max-height: 100%;
 }
