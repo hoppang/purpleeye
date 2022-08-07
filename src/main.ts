@@ -31,3 +31,11 @@ ipcMain.on('backToBrowser', (_event: Electron.Event) => {
     log.info('back to browser main');
     browser.loadIndexPage();
 });
+
+ipcMain.on('toggleFullscreen', (_event: Electron.Event) => {
+    browser.toggleFullscreen();
+});
+
+ipcMain.on('quit', (_event: Electron.Event) => {
+    browser.quit();
+});

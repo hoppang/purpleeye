@@ -6,8 +6,12 @@
 </head>
 
 <body>
-    <p><a href="#" onclick="backToBrowser();">Back</a></p>
     <img id="canvas" class="main"></img>
+    <div id="controlBar">
+        <a href="#" onclick="backToBrowser();">Back</a>
+        <a href="#" onclick="quit();">Quit</a>
+        <a href="#" onclick="toggleFullscreen();">Fullscreen</a>
+    </div>
 
     <script>
         // hack for 'exports is not defined'

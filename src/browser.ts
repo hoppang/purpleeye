@@ -14,6 +14,8 @@ class Browser {
         this.win = new BrowserWindow({
             width: 800,
             height: 600,
+            minWidth: 800,
+            minHeight: 600,
             // hack for 'require is not defined'
             webPreferences: {
                 nodeIntegration: true,
@@ -44,6 +46,14 @@ class Browser {
         const cwd = process.cwd();
         const list = this.ls(cwd);
         this.win.webContents.send('ls', { cwd, elements: list });
+    }
+
+    toggleFullscreen(): void {
+        this.win.setFullScreen(!this.win.fullScreen);
+    }
+
+    quit() {
+        this.win.close();
     }
 
     private ls(path: string): Array<FileEntry> {
