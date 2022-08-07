@@ -26,3 +26,6 @@ jobs:
       run: tsc
     - name: lint
       run: npm run lint
+    - name: test
+      run: npm test
+
