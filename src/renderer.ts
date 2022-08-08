@@ -14,14 +14,14 @@ ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: Array<File
     for (let i = 0; i < elements.length; i++) {
         if (elements[i].isDirectory) {
             str = util.format(
-                '%s\n<tr><td><a href="#" onclick="changeDir(\'%s\');">%s</a></td></tr>',
+                '%s\n<tr><td><a href="#" class="listitem_dir" onclick="changeDir(\'%s\');">%s</a></td></tr>',
                 str,
                 elements[i].name,
                 elements[i].name,
             );
         } else {
             str = util.format(
-                '%s\n<tr><td><a href="#" onclick="view(\'%s\', \'%s\');">%s</a></td></tr>',
+                '%s\n<tr><td><a href="#" class="listitem_file" onclick="view(\'%s\', \'%s\');">%s</a></td></tr>',
                 str,
                 cwd,
                 elements[i].name,
