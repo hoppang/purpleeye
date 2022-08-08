@@ -41,6 +41,10 @@ ipcMain.on('next', (_event: Electron.Event) => {
     browser.next();
 });
 
+ipcMain.on('prev', (_event: Electron.Event) => {
+    browser.prev();
+});
+
 ipcMain.on('quit', (_event: Electron.Event) => {
     browser.quit();
 });

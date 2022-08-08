@@ -74,6 +74,11 @@ class Browser {
         this.win.webContents.send('load_image', { cwd: this.cwd, filename: this.files[this.index], index: this.index });
     }
 
+    prev(): void {
+        this.index = this.getPrevIndex(this.index);
+        this.win.webContents.send('load_image', { cwd: this.cwd, filename: this.files[this.index], index: this.index });
+    }
+
     quit() {
         this.win.close();
     }
@@ -125,6 +130,14 @@ class Browser {
             return index + 1;
         } else {
             return 0;
+        }
+    }
+
+    private getPrevIndex(index: number): number {
+        if (index - 1 >= 0) {
+            return index - 1;
+        } else {
+            return this.files.length - 1;
         }
     }
 }
