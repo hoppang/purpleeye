@@ -56,19 +56,23 @@ class Browser {
         this.win.close();
     }
 
-    private ls(path: string): Array<FileEntry> {
-        const files = fs.readdirSync(path);
-        const result = new Array<FileEntry>();
+    private ls(path: string): [Array<string>, Array<string>] {
+        const entries = fs.readdirSync(path);
+        const dirs = new Array<string>();
+        const files = new Array<string>();
 
-        for (let i = 0; i < files.length; i++) {
-            const filename = files[i];
+        for (let i = 0; i < entries.length; i++) {
+            const name = entries[i];
 
-            const is_dir = fs.statSync(path + '/' + filename).isDirectory();
-            if ((is_dir == true || this.is_image(filename)) && !this.is_hidden(filename)) {
-                result.push({ name: filename, isDirectory: is_dir });
+            const is_dir = fs.statSync(path + '/' + name).isDirectory();
+            if (is_dir && !this.is_hidden(name)) {
+                dirs.push(name);
+            }
+            else if (this.is_image(name) && !this.is_hidden(name)) {
+                files.push(name);
             }
         }
-        return result;
+        return [dirs, files];
     }
 
     private is_hidden(filename: string): boolean {

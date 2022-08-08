@@ -3,39 +3,32 @@ import { FileEntry } from './browser';
 import util from 'util';
 import path from 'path';
 
-ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: Array<FileEntry> }) {
+ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: [Array<string>, Array<string>] }) {
     const cwd = data.cwd;
-    const elements = data.elements;
-
-    elements.sort((a: FileEntry, b: FileEntry): number => {
-        if (!a.isDirectory && b.isDirectory) {
-            return 1;
-        }
-
-        return -1;
-    });
+    const dirs = data.elements[0];
+    const files = data.elements[1];
 
     let str = '<table style="border: 2px;">';
     // 항상 상위 디렉토리는 표시
-    str = util.format('%s\n<tr><td><a href="#" onclick="changeDir(\'..\');">..</a></td></tr>', str);
+    str = util.format('%s\n<tr><td><a href="#" class="listitem_dir" onclick="changeDir(\'..\');">..</a></td></tr>', str);
 
-    for (let i = 0; i < elements.length; i++) {
-        if (elements[i].isDirectory) {
-            str = util.format(
-                '%s\n<tr><td><a href="#" class="listitem_dir" onclick="changeDir(\'%s\');">%s</a></td></tr>',
-                str,
-                elements[i].name,
-                elements[i].name,
-            );
-        } else {
-            str = util.format(
-                '%s\n<tr><td><a href="#" class="listitem_file" onclick="view(\'%s\', \'%s\');">%s</a></td></tr>',
-                str,
-                cwd,
-                elements[i].name,
-                elements[i].name,
-            );
-        }
+    for(let i=0; i<dirs.length; i++) {
+        str = util.format(
+            '%s\n<tr><td><a href="#" class="listitem_dir" onclick="changeDir(\'%s\');">%s</a></td></tr>',
+            str,
+            dirs[i],
+            dirs[i]
+        );
+    }
+
+    for(let i=0; i<files.length; i++) {
+        str = util.format(
+            '%s\n<tr><td><a href="#" class="listitem_file" onclick="view(\'%s\', \'%s\');">%s</a></td></tr>',
+            str,
+            cwd,
+            files[i],
+            files[i]
+        );
     }
 
     str = str.concat('</table>');
