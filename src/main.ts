@@ -1,6 +1,7 @@
 import { app, ipcMain } from 'electron';
 import log from 'electron-log';
 import { Browser } from './browser';
+import util from 'util';
 
 let browser: Browser;
 
@@ -10,7 +11,7 @@ app.whenReady().then(() => {
 
     if (process.argv.length == 3) {
         log.info('load viewer page');
-        browser.loadViewerPage(process.argv[2]);
+        browser.initViewerPage(process.argv[2]);
     } else {
         log.info('load index page');
         browser.loadIndexPage();
@@ -22,9 +23,9 @@ ipcMain.on('cd', (_event, dirname: string) => {
     browser.chdir(dirname);
 });
 
-ipcMain.on('view', (_event, filepath: string) => {
-    log.info('view ' + filepath);
-    browser.loadViewerPage(filepath);
+ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
+    log.info(util.format('view [url] %s [filename] %s', parameter.cwd, parameter.filename));
+    browser.loadViewerPage(parameter.cwd, parameter.filename);
 });
 
 ipcMain.on('backToBrowser', (_event: Electron.Event) => {
@@ -34,6 +35,10 @@ ipcMain.on('backToBrowser', (_event: Electron.Event) => {
 
 ipcMain.on('toggleFullscreen', (_event: Electron.Event) => {
     browser.toggleFullscreen();
+});
+
+ipcMain.on('next', (_event: Electron.Event) => {
+    browser.next();
 });
 
 ipcMain.on('quit', (_event: Electron.Event) => {
