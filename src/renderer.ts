@@ -7,6 +7,14 @@ ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: Array<File
     const cwd = data.cwd;
     const elements = data.elements;
 
+    elements.sort((a: FileEntry, b: FileEntry): number => {
+        if (!a.isDirectory && b.isDirectory) {
+            return 1;
+        }
+
+        return -1;
+    });
+
     let str = '<table style="border: 2px;">';
     // 항상 상위 디렉토리는 표시
     str = util.format('%s\n<tr><td><a href="#" onclick="changeDir(\'..\');">..</a></td></tr>', str);
