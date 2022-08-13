@@ -1,10 +1,11 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import log from 'electron-log';
 import { Browser } from './browser';
-import IViewer from './viewer/iviewer';
-import ImageViewer from './viewer/image_viewer';
 import util from 'util';
 import { FILE_TYPE, Util } from './util';
+import IViewer from './viewer/iviewer';
+import ImageViewer from './viewer/image_viewer';
+import CBZViewer from './viewer/cbz_viewer';
 
 let main: Main;
 let viewer: IViewer;
@@ -18,7 +19,14 @@ app.whenReady().then(() => {
     if (process.argv.length == 3) {
         log.info('load viewer page');
         // todo: cbz면 cbz viewer 사용
-        viewer = new ImageViewer(main.win());
+        switch(Util.getFileType(process.argv[2])) {
+            case FILE_TYPE.IMAGE:
+                viewer = new ImageViewer(main.win());
+                break;
+            case FILE_TYPE.CBZ:
+                viewer = new CBZViewer(main.win());
+                break;
+        }
         viewer.init(process.cwd(), process.argv[2]);
     } else {
         log.info('load index page');
@@ -61,17 +69,19 @@ ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
 
     switch(fileType) {
         case FILE_TYPE.CBZ:
-            // implement
+            if (viewer == null || viewer == undefined) {
+                viewer = new CBZViewer(main.win());
+            }
             break;
         case FILE_TYPE.IMAGE:
-            if (viewer == null) {
+            if (viewer == null || viewer == undefined) {
                 viewer = new ImageViewer(main.win());
             }
-            viewer.init(parameter.cwd, parameter.filename);
             break;
         default:
             break;
     }
+    viewer.init(parameter.cwd, parameter.filename);
 });
 
 ipcMain.on('backToBrowser', (_event: Electron.Event) => {

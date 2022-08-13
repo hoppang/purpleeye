@@ -7,13 +7,12 @@ class ImageViewer implements IViewer {
     private readonly _win: BrowserWindow;
     private _files: Array<string>;
     private _cursor: number;
-    private _cwd: string;
+    private _cwd?: string;
 
     constructor(win: BrowserWindow) {
         this._win = win;
         this._files = [];
         this._cursor = 0;
-        this._cwd = '';
     }
 
     init(cwd: string, filename: string): void {
