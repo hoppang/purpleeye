@@ -9,8 +9,17 @@ type FileEntry = {
 
 class Browser {
     private win: BrowserWindow;
+    private cwd: string;
+    private dirs: Array<string>;
+    private files: Array<string>;
+    private index: number;
 
     constructor() {
+        this.dirs = new Array<string>();
+        this.files = new Array<string>();
+        this.cwd = process.cwd();
+        this.index = 0;
+
         this.win = new BrowserWindow({
             width: 800,
             height: 600,
@@ -28,47 +37,76 @@ class Browser {
         this.win.loadFile('view/index.html');
         this.win.webContents.once('did-finish-load', () => {
             const cwd = process.cwd();
-            const list = this.ls(cwd);
-            this.win.webContents.send('ls', { cwd, elements: list });
+            this.ls(cwd);
+            this.win.webContents.send('ls', { cwd, elements: { dirs: this.dirs, files: this.files } });
         });
     }
 
-    loadViewerPage(filePath: string): void {
+    initViewerPage(filename: string): void {
+        this.ls(process.cwd());
+        this.win.webContents.send('load_image', { cwd: this.cwd, filename: filename, index: this.getIndex(filename) });
+    }
+
+    loadViewerPage(dir: string, filename: string): void {
         this.win.loadFile('view/viewer.html');
         this.win.webContents.once('did-finish-load', () => {
-            log.info('send loadImage message to renderer: ' + filePath);
-            this.win.webContents.send('load_image', filePath);
+            if (this.cwd != dir) {
+                this.ls(dir);
+            }
+            log.info('send loadImage message to renderer: ' + filename);
+            this.win.webContents.send('load_image', { cwd: dir, filename: filename, index: this.getIndex(filename) });
         });
     }
 
     chdir(newdir: string) {
         process.chdir(newdir);
-        const cwd = process.cwd();
-        const list = this.ls(cwd);
-        this.win.webContents.send('ls', { cwd, elements: list });
+        this.cwd = process.cwd();
+        this.ls(this.cwd);
+        this.win.webContents.send('ls', { cwd: this.cwd, elements: { dirs: this.dirs, files: this.files } });
     }
 
     toggleFullscreen(): void {
         this.win.setFullScreen(!this.win.fullScreen);
     }
 
+    next(): void {
+        this.index = this.getNextIndex(this.index);
+        this.win.webContents.send('load_image', { cwd: this.cwd, filename: this.files[this.index], index: this.index });
+    }
+
+    prev(): void {
+        this.index = this.getPrevIndex(this.index);
+        this.win.webContents.send('load_image', { cwd: this.cwd, filename: this.files[this.index], index: this.index });
+    }
+
     quit() {
         this.win.close();
     }
 
-    private ls(path: string): Array<FileEntry> {
-        const files = fs.readdirSync(path);
-        const result = new Array<FileEntry>();
+    /**
+     * 지정한 디렉토리의 파일 목록을 읽고 내부 변수를 업데이트한다.
+     * @param path 대상 디렉토리
+     * @returns
+     */
+    private ls(path: string): void {
+        const entries = fs.readdirSync(path);
+        this.dirs = [];
+        this.files = [];
 
-        for (let i = 0; i < files.length; i++) {
-            const filename = files[i];
+        for (let i = 0; i < entries.length; i++) {
+            const name = entries[i];
 
-            const is_dir = fs.statSync(path + '/' + filename).isDirectory();
-            if ((is_dir == true || this.is_image(filename)) && !this.is_hidden(filename)) {
-                result.push({ name: filename, isDirectory: is_dir });
+            const is_dir = fs.statSync(path + '/' + name).isDirectory();
+            if (is_dir && !this.is_hidden(name)) {
+                this.dirs.push(name);
+            } else if (this.is_image(name) && !this.is_hidden(name)) {
+                this.files.push(name);
             }
         }
-        return result;
+    }
+
+    private getIndex(filename: string): number {
+        return this.files.indexOf(filename);
     }
 
     private is_hidden(filename: string): boolean {
@@ -84,6 +122,22 @@ class Browser {
                 return true;
             default:
                 return false;
+        }
+    }
+
+    private getNextIndex(index: number): number {
+        if (index + 1 < this.files.length) {
+            return index + 1;
+        } else {
+            return 0;
+        }
+    }
+
+    private getPrevIndex(index: number): number {
+        if (index - 1 >= 0) {
+            return index - 1;
+        } else {
+            return this.files.length - 1;
         }
     }
 }

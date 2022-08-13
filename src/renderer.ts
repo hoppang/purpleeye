@@ -1,33 +1,35 @@
 import { ipcRenderer } from 'electron';
-import { FileEntry } from './browser';
 import util from 'util';
-import path from 'path';
 
-ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: Array<FileEntry> }) {
+ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: { dirs: Array<string>; files: Array<string> } }) {
     const cwd = data.cwd;
-    const elements = data.elements;
+    const dirs = data.elements.dirs;
+    const files = data.elements.files;
 
     let str = '<table style="border: 2px;">';
     // 항상 상위 디렉토리는 표시
-    str = util.format('%s\n<tr><td><a href="#" onclick="changeDir(\'..\');">..</a></td></tr>', str);
+    str = util.format(
+        '%s\n<tr><td><a href="#" class="listitem_dir" onclick="changeDir(\'..\');">..</a></td></tr>',
+        str,
+    );
 
-    for (let i = 0; i < elements.length; i++) {
-        if (elements[i].isDirectory) {
-            str = util.format(
-                '%s\n<tr><td><a href="#" onclick="changeDir(\'%s\');">%s</a></td></tr>',
-                str,
-                elements[i].name,
-                elements[i].name,
-            );
-        } else {
-            str = util.format(
-                '%s\n<tr><td><a href="#" onclick="view(\'%s\', \'%s\');">%s</a></td></tr>',
-                str,
-                cwd,
-                elements[i].name,
-                elements[i].name,
-            );
-        }
+    for (let i = 0; i < dirs.length; i++) {
+        str = util.format(
+            '%s\n<tr><td><a href="#" class="listitem_dir" onclick="changeDir(\'%s\');">%s</a></td></tr>',
+            str,
+            dirs[i],
+            dirs[i],
+        );
+    }
+
+    for (let i = 0; i < files.length; i++) {
+        str = util.format(
+            '%s\n<tr><td><a href="#" class="listitem_file" onclick="view(\'%s\', \'%s\');">%s</a></td></tr>',
+            str,
+            cwd,
+            files[i],
+            files[i],
+        );
     }
 
     str = str.concat('</table>');
@@ -46,5 +48,5 @@ function changeDir(dirname: string) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function view(cwd: string, filename: string) {
-    ipcRenderer.send('view', path.join(cwd, filename));
+    ipcRenderer.send('view', { cwd: cwd, filename: filename });
 }
