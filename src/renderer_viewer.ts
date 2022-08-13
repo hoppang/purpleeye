@@ -3,8 +3,8 @@ import log from 'electron-log';
 import util from 'util';
 import path from 'path';
 
-ipcRenderer.on('load_image', (_event, { cwd: cwd, filename: filename, index: index }) => {
-    log.info(util.format('load_image(viewer): %s / %s / %d', cwd, filename, index));
+ipcRenderer.on('load_image', (_event, { cwd: cwd, filename: filename }) => {
+    log.info(util.format('load_image(viewer): %s / %s', cwd, filename));
     const canvas = document.getElementById('canvas') as HTMLImageElement;
     canvas.src = path.join(cwd, filename);
 });

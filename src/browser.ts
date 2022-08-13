@@ -2,85 +2,64 @@ import { BrowserWindow } from 'electron';
 import log from 'electron-log';
 import fs from 'fs';
 
-type FileEntry = {
-    name: string;
-    isDirectory: boolean;
-};
-
+/**
+ * 파일/디렉토리 목록 등을 관리하는 모듈
+ */
 class Browser {
-    private win: BrowserWindow;
-    private cwd: string;
+    private _cwd: string;
     private dirs: Array<string>;
     private files: Array<string>;
     private index: number;
+    private readonly _win: BrowserWindow;
 
-    constructor() {
+    constructor(win: BrowserWindow) {
         this.dirs = new Array<string>();
         this.files = new Array<string>();
-        this.cwd = process.cwd();
+        this._cwd = process.cwd();
         this.index = 0;
-
-        this.win = new BrowserWindow({
-            width: 800,
-            height: 600,
-            minWidth: 800,
-            minHeight: 600,
-            // hack for 'require is not defined'
-            webPreferences: {
-                nodeIntegration: true,
-                contextIsolation: false,
-            },
-        });
+        this._win = win;
     }
 
     loadIndexPage(): void {
-        this.win.loadFile('view/index.html');
-        this.win.webContents.once('did-finish-load', () => {
-            const cwd = process.cwd();
-            this.ls(cwd);
-            this.win.webContents.send('ls', { cwd, elements: { dirs: this.dirs, files: this.files } });
+        this._win.loadFile('view/index.html');
+        this._win.webContents.once('did-finish-load', () => {
+            this._cwd = process.cwd();
+            this.ls(this._cwd);
+            this._win.webContents.send('ls', { cwd: this._cwd, elements: { dirs: this.dirs, files: this.files } });
         });
     }
 
-    initViewerPage(filename: string): void {
-        this.ls(process.cwd());
-        this.win.webContents.send('load_image', { cwd: this.cwd, filename: filename, index: this.getIndex(filename) });
-    }
+    getIndexOf(filename: string): number {
+        if (this.files.length == 0) {
+            this.ls(this._cwd);
+        }
 
-    loadViewerPage(dir: string, filename: string): void {
-        this.win.loadFile('view/viewer.html');
-        this.win.webContents.once('did-finish-load', () => {
-            if (this.cwd != dir) {
-                this.ls(dir);
-            }
-            log.info('send loadImage message to renderer: ' + filename);
-            this.win.webContents.send('load_image', { cwd: dir, filename: filename, index: this.getIndex(filename) });
-        });
+        return this.files.indexOf(filename);
     }
 
     chdir(newdir: string) {
         process.chdir(newdir);
-        this.cwd = process.cwd();
-        this.ls(this.cwd);
-        this.win.webContents.send('ls', { cwd: this.cwd, elements: { dirs: this.dirs, files: this.files } });
+        this._cwd = process.cwd();
+        this.ls(this._cwd);
+        this._win.webContents.send('ls', { cwd: this._cwd, elements: { dirs: this.dirs, files: this.files } });
     }
 
     toggleFullscreen(): void {
-        this.win.setFullScreen(!this.win.fullScreen);
+        this._win.setFullScreen(!this._win.fullScreen);
     }
 
     next(): void {
         this.index = this.getNextIndex(this.index);
-        this.win.webContents.send('load_image', { cwd: this.cwd, filename: this.files[this.index], index: this.index });
+        this._win.webContents.send('load_image', { cwd: this._cwd, filename: this.files[this.index], index: this.index });
     }
 
     prev(): void {
         this.index = this.getPrevIndex(this.index);
-        this.win.webContents.send('load_image', { cwd: this.cwd, filename: this.files[this.index], index: this.index });
+        this._win.webContents.send('load_image', { cwd: this._cwd, filename: this.files[this.index], index: this.index });
     }
 
     quit() {
-        this.win.close();
+        this._win.close();
     }
 
     /**
@@ -100,7 +79,7 @@ class Browser {
                 const is_dir = fs.statSync(path + '/' + name).isDirectory();
                 if (is_dir && !this.is_hidden(name)) {
                     this.dirs.push(name);
-                } else if (this.is_image(name) && !this.is_hidden(name)) {
+                } else if ((this.is_image(name) || this.is_comics_archive(name)) && !this.is_hidden(name)) {
                     this.files.push(name);
                 }
             } catch (e) {
@@ -109,8 +88,8 @@ class Browser {
         }
     }
 
-    private getIndex(filename: string): number {
-        return this.files.indexOf(filename);
+    setIndex(newIndex: number) {
+        this.index = newIndex;
     }
 
     private is_hidden(filename: string): boolean {
@@ -123,6 +102,18 @@ class Browser {
         switch (extension?.toLowerCase()) {
             case 'jpg':
             case 'jpeg':
+            case 'png':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private is_comics_archive(path: string): boolean {
+        const extension = path.split('.').pop();
+
+        switch (extension?.toLowerCase()) {
+            case 'cbz':
                 return true;
             default:
                 return false;
@@ -146,4 +137,4 @@ class Browser {
     }
 }
 
-export { Browser, FileEntry };
+export { Browser };
