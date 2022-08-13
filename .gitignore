@@ -108,3 +108,8 @@ dist
 *.jpeg
 *.png
 *.cbz
+*.webp
+*.zip
+
+# macos files
+.DS_Store
