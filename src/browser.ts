@@ -96,11 +96,15 @@ class Browser {
         for (let i = 0; i < entries.length; i++) {
             const name = entries[i];
 
-            const is_dir = fs.statSync(path + '/' + name).isDirectory();
-            if (is_dir && !this.is_hidden(name)) {
-                this.dirs.push(name);
-            } else if (this.is_image(name) && !this.is_hidden(name)) {
-                this.files.push(name);
+            try {
+                const is_dir = fs.statSync(path + '/' + name).isDirectory();
+                if (is_dir && !this.is_hidden(name)) {
+                    this.dirs.push(name);
+                } else if (this.is_image(name) && !this.is_hidden(name)) {
+                    this.files.push(name);
+                }
+            } catch (e) {
+                // do nothing
             }
         }
     }
