@@ -69,14 +69,10 @@ ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
 
     switch(fileType) {
         case FILE_TYPE.CBZ:
-            if (viewer == null || viewer == undefined) {
-                viewer = new CBZViewer(main.win());
-            }
+            viewer = new CBZViewer(main.win());
             break;
         case FILE_TYPE.IMAGE:
-            if (viewer == null || viewer == undefined) {
-                viewer = new ImageViewer(main.win());
-            }
+            viewer = new ImageViewer(main.win());
             break;
         default:
             break;
