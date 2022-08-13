@@ -1,24 +1,25 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import log from 'electron-log';
 import { Browser } from './browser';
-import ImgViewer from './imgviewer';
+import IViewer from './viewer/iviewer';
+import ImageViewer from './viewer/image_viewer';
 import util from 'util';
-import { FILE_TYPE, getFileType } from './filetype_util';
+import { FILE_TYPE, Util } from './util';
 
 let main: Main;
+let viewer: IViewer;
 let browser: Browser;
-let imageViewer: ImgViewer;
 
 app.whenReady().then(() => {
     log.info('arguments: ' + process.argv);
     main = new Main();
     browser = new Browser(main.win());
-    imageViewer = new ImgViewer(main.win());
 
     if (process.argv.length == 3) {
         log.info('load viewer page');
-        browser.setIndex(browser.getIndexOf(process.argv[2]));
-        imageViewer.load(process.cwd(), process.argv[2]);
+        // todo: cbz면 cbz viewer 사용
+        viewer = new ImageViewer(main.win());
+        viewer.init(process.cwd(), process.argv[2]);
     } else {
         log.info('load index page');
         browser.loadIndexPage();
@@ -55,7 +56,7 @@ ipcMain.on('cd', (_event, dirname: string) => {
 ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
     log.info(util.format('view [url] %s [filename] %s', parameter.cwd, parameter.filename));
 
-    let fileType = getFileType(parameter.filename);
+    let fileType = Util.getFileType(parameter.filename);
     log.info('fileType: ' + fileType);
 
     switch(fileType) {
@@ -63,8 +64,10 @@ ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
             // implement
             break;
         case FILE_TYPE.IMAGE:
-            browser.setIndex(browser.getIndexOf(parameter.filename));
-            imageViewer.load(parameter.cwd, parameter.filename);
+            if (viewer == null) {
+                viewer = new ImageViewer(main.win());
+            }
+            viewer.init(parameter.cwd, parameter.filename);
             break;
         default:
             break;
@@ -77,18 +80,17 @@ ipcMain.on('backToBrowser', (_event: Electron.Event) => {
 });
 
 ipcMain.on('next', (_event: Electron.Event) => {
-    browser.next();
-});
-
-ipcMain.on('toggleFullscreen', (_event: Electron.Event) => {
-    browser.toggleFullscreen();
+    viewer.next();
 });
 
 ipcMain.on('prev', (_event: Electron.Event) => {
-    browser.prev();
+    viewer.prev();
+});
+
+ipcMain.on('toggleFullscreen', (_event: Electron.Event) => {
+    viewer.toggleFullscreen();
 });
 
 ipcMain.on('quit', (_event: Electron.Event) => {
-    browser.quit();
+    viewer.quit();
 });
-
