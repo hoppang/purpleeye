@@ -19,6 +19,8 @@
 		"asar": true,
     "files": [
       "dist/**/*",
+      "view/**/*",
+      "css/**/*",
       "package.json"
     ],
 		"protocols": {
