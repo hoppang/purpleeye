@@ -1,7 +1,6 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, WebContents } from 'electron';
 import IViewer from './iviewer';
 import StreamZip from 'node-stream-zip';
-import log from 'electron-log';
 import path from 'path';
 import crypto from 'crypto';
 import fs from 'fs';
@@ -55,14 +54,29 @@ export default class CBZViewer implements IViewer {
         const entryOut = path.join(tmpDir, outputFile);
 
         if (fs.existsSync(entryOut)) {
-            this._win.webContents.send('load_image', { cwd: '', filename: entryOut });
+            this._win.webContents.send('load_image', {
+                cwd: '',
+                filename: entryOut,
+                index: this._cursor,
+                maxPage: this._entries.length,
+            });
         } else {
             this._zip?.extract(entryName, entryOut, (err: any) => {
                 if (err == undefined) {
-                    this._win.webContents.send('load_image', { cwd: '', filename: entryOut });
+                    this._win.webContents.send('load_image', {
+                        cwd: '',
+                        filename: entryOut,
+                        index: this._cursor,
+                        maxPage: this._entries.length,
+                    });
                 }
             });
         }
+    }
+
+    goto(sender: WebContents, pageNo: number): void {
+        this._cursor = pageNo;
+        this.extract();
     }
 
     next(): void {

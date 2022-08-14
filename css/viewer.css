@@ -44,3 +44,7 @@ div#img-container img {
     opacity:1;
     transition:0.2s;
 }
+
+#pageSlider {
+    width: 80%;
+}

@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, WebContents } from 'electron';
 import fs from 'fs';
 import IViewer from './iviewer';
 import Util from '../util';
@@ -20,18 +20,43 @@ class ImageViewer implements IViewer {
         this.buildFilesList(cwd, filename);
         this._win.loadFile('view/viewer.html');
         this._win.webContents.once('did-finish-load', () => {
-            this._win.webContents.send('load_image', { cwd: cwd, filename: filename });
+            this._win.webContents.send('load_image', {
+                cwd: cwd,
+                filename: filename,
+                index: this._cursor,
+                maxPage: this._files.length,
+            });
+        });
+    }
+
+    goto(sender: WebContents, pageNo: number): void {
+        this._cursor = pageNo;
+        sender.send('load_image', {
+            cwd: this._cwd,
+            filename: this._files[this._cursor],
+            index: this._cursor,
+            maxPage: this._files.length,
         });
     }
 
     next(): void {
         this._cursor = this.nextIndexOf(this._cursor);
-        this._win.webContents.send('load_image', { cwd: this._cwd, filename: this._files[this._cursor] });
+        this._win.webContents.send('load_image', {
+            cwd: this._cwd,
+            filename: this._files[this._cursor],
+            index: this._cursor,
+            maxPage: this._files.length,
+        });
     }
 
     prev(): void {
         this._cursor = this.prevIndexOf(this._cursor);
-        this._win.webContents.send('load_image', { cwd: this._cwd, filename: this._files[this._cursor] });
+        this._win.webContents.send('load_image', {
+            cwd: this._cwd,
+            filename: this._files[this._cursor],
+            index: this._cursor,
+            maxPage: this._files.length,
+        });
     }
 
     toggleFullscreen(): void {

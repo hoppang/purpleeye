@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
 import { Browser } from './browser';
 import util from 'util';
@@ -83,6 +83,10 @@ ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
 ipcMain.on('backToBrowser', (_event: Electron.Event) => {
     log.info('back to browser main');
     browser.loadIndexPage();
+});
+
+ipcMain.on('goto', (event: IpcMainEvent, pageNo: number) => {
+    viewer.goto(event.sender, pageNo);
 });
 
 ipcMain.on('next', (_event: Electron.Event) => {
