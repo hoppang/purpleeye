@@ -3,6 +3,17 @@ import log from 'electron-log';
 import util from 'util';
 import path from 'path';
 
+document.addEventListener('mousewheel', (event: Event) => {
+    var deltaY = (<WheelEvent>event).deltaY;
+
+    if (deltaY > 0) {
+        next();
+    }
+    else if (deltaY < 0) {
+        prev();
+    }
+});
+
 ipcRenderer.on('load_image', (_event, { cwd: cwd, filename: filename }) => {
     log.info(util.format('load_image(viewer): %s / %s', cwd, filename));
     const canvas = document.getElementById('canvas') as HTMLImageElement;
