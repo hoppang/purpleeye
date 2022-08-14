@@ -5,6 +5,7 @@
   "main": "./dist/main.js",
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf ./dist && rm -rf ./build && rm -rf ./node_modules",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix && js-beautify --type html view/*",
     "test": "npx jest",
