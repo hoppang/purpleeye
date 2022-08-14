@@ -1,5 +1,3 @@
-import log from 'electron-log';
-
 const FILE_TYPE = {
     CBZ: 1,
     IMAGE: 2,

@@ -96,20 +96,23 @@ ipcMain.on('goto', (event: IpcMainEvent, pageNo: number) => {
     viewer.goto(event.sender, pageNo);
 });
 
-ipcMain.on('next', (_event: Electron.Event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ipcMain.on('next', (event: Electron.Event) => {
     viewer.next();
 });
 
-ipcMain.on('prev', (_event: Electron.Event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ipcMain.on('prev', (event: Electron.Event) => {
     viewer.prev();
 });
 
-ipcMain.on('toggleFullscreen', (_event: Electron.Event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ipcMain.on('toggleFullscreen', (event: Electron.Event) => {
     viewer.toggleFullscreen();
 });
 
-// quit
-ipcMain.on('quit', (_event: Electron.Event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ipcMain.on('quit', (event: Electron.Event) => {
     viewer.quit();
 });
 

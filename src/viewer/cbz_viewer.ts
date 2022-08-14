@@ -62,6 +62,7 @@ export default class CBZViewer implements IViewer {
                 maxPage: this._entries.length,
             });
         } else {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             this._zip?.extract(entryName, entryOut, (err: any) => {
                 if (err == undefined) {
                     this._win.webContents.send('load_image', {
