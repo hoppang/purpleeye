@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
+import { app, ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
 import { Browser } from './browser';
 import { FILE_TYPE, Util } from './util';

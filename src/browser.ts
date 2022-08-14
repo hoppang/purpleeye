@@ -1,5 +1,4 @@
 import { BrowserWindow } from 'electron';
-import log from 'electron-log';
 import fs from 'fs';
 import SettingsManager from './managers/settings_manager';
 import { Util } from './util';
@@ -11,14 +10,12 @@ class Browser {
     private _cwd: string;
     private dirs: Array<string>;
     private files: Array<string>;
-    private index: number;
     private readonly _win: BrowserWindow;
 
     constructor(win: BrowserWindow) {
         this.dirs = new Array<string>();
         this.files = new Array<string>();
         this._cwd = process.cwd();
-        this.index = 0;
         this._win = win;
     }
 

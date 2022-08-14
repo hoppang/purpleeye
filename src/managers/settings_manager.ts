@@ -42,7 +42,6 @@ class SettingsManager {
     }
 
     setLastDir(dir: string): void {
-        log.info("SET LAST DIR: " + dir);
         settings.setSync('lastDir', dir);
     }
 }

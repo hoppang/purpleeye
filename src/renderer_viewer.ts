@@ -49,12 +49,10 @@ function toggleFullscreen(): void {
     ipcRenderer.send('toggleFullscreen');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function next(): void {
     ipcRenderer.send('next');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function prev(): void {
     ipcRenderer.send('prev');
 }

@@ -1,10 +1,13 @@
-import { ipcMain, IpcMainEvent } from "electron";
-import log from "electron-log";
-import SettingsManager from "../managers/settings_manager";
+import { ipcMain, IpcMainEvent } from 'electron';
+import log from 'electron-log';
+import SettingsManager from '../managers/settings_manager';
 
 ipcMain.on(
     'save_settings',
-    (event: IpcMainEvent, params: { fullscreenViewer: boolean; quitFullscreenWhenBack: boolean, rememberLastDir: boolean }) => {
+    (
+        event: IpcMainEvent,
+        params: { fullscreenViewer: boolean; quitFullscreenWhenBack: boolean; rememberLastDir: boolean },
+    ) => {
         log.info('save settings: ' + JSON.stringify(params));
         SettingsManager.instance().setFullscreenViewer(params.fullscreenViewer);
         SettingsManager.instance().setQuitFullscreenWhenBack(params.quitFullscreenWhenBack);

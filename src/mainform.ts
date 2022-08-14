@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow } from 'electron';
 
 export default class MainForm {
     private _win: BrowserWindow;
