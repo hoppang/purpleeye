@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
+import settings from "electron-settings";
 import { Browser } from './browser';
 import util from 'util';
 import { FILE_TYPE, Util } from './util';
@@ -11,14 +12,19 @@ let main: Main;
 let viewer: IViewer;
 let browser: Browser;
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
     log.info('arguments: ' + process.argv);
     main = new Main();
+
     browser = new Browser(main.win());
 
     if (process.argv.length == 3) {
         log.info('load viewer page');
-        // todo: cbz면 cbz viewer 사용
+        var fullscreen = false;
+        if (await settings.get('fullscreen_viewer.enabled') === true) {
+            fullscreen = true;
+        }
+
         switch(Util.getFileType(process.argv[2])) {
             case FILE_TYPE.IMAGE:
                 viewer = new ImageViewer(main.win());
@@ -27,7 +33,7 @@ app.whenReady().then(() => {
                 viewer = new CBZViewer(main.win());
                 break;
         }
-        viewer.init(process.cwd(), process.argv[2]);
+        viewer.init(process.cwd(), process.argv[2], fullscreen);
     } else {
         log.info('load index page');
         browser.loadIndexPage();
@@ -61,7 +67,7 @@ ipcMain.on('cd', (_event, dirname: string) => {
     browser.chdir(dirname);
 });
 
-ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
+ipcMain.on('view', async (_event, parameter: { cwd: string; filename: string }) => {
     log.info(util.format('view [url] %s [filename] %s', parameter.cwd, parameter.filename));
 
     let fileType = Util.getFileType(parameter.filename);
@@ -77,7 +83,13 @@ ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
         default:
             break;
     }
-    viewer.init(parameter.cwd, parameter.filename);
+
+    var fullscreen = false;
+    if (await settings.get('fullscreen_viewer.enabled') === true) {
+        fullscreen = true;
+    }
+
+    viewer.init(parameter.cwd, parameter.filename, fullscreen);
 });
 
 ipcMain.on('backToBrowser', (_event: Electron.Event) => {
@@ -104,4 +116,12 @@ ipcMain.on('toggleFullscreen', (_event: Electron.Event) => {
 // quit
 ipcMain.on('quit', (_event: Electron.Event) => {
     viewer.quit();
+});
+
+ipcMain.on('save_settings', async (_event: Electron.Event, params: { fullscreen_viewer: boolean }) => {
+    log.info("save settings: " + JSON.stringify(params));
+
+    await settings.set('fullscreen_viewer',{
+        enabled: params.fullscreen_viewer,
+    });
 });

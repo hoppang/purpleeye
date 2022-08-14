@@ -1,0 +1,23 @@
+<html>
+
+<head>
+    <title>PurpleEye Settings</title>
+    <link rel="stylesheet" href="../css/browser.css">
+</head>
+
+<body>
+    Settings
+
+    <form id="form_settings" action="#">
+        <input type="checkbox" id="fullscreen_viewer" name="fullscreen_viewer" checked>Fullscreen Viewer</input>
+        <input type="submit" id="save_settings" name="save_settings" value="Save Settings">
+    </form>
+
+    <script>
+        // hack for 'exports is not defined'
+        var exports = {};
+    </script>
+    <script src="../dist/renderer_settings.js"></script>
+</body>
+
+</html>

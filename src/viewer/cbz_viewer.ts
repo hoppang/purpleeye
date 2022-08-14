@@ -18,8 +18,9 @@ export default class CBZViewer implements IViewer {
         this._win = win;
     }
 
-    init(cwd: string, filename: string): void {
+    init(cwd: string, filename: string, fullscreen: boolean): void {
         this._win.loadFile('view/viewer.html');
+        this._win.setFullScreen(fullscreen);
         this._zipPath = path.join(cwd, filename);
         this._zip = new StreamZip({ file: this._zipPath, storeEntries: true });
 

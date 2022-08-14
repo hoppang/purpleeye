@@ -15,10 +15,11 @@ class ImageViewer implements IViewer {
         this._cursor = 0;
     }
 
-    init(cwd: string, filename: string): void {
+    init(cwd: string, filename: string, fullscreen: boolean): void {
         this._cwd = cwd;
         this.buildFilesList(cwd, filename);
         this._win.loadFile('view/viewer.html');
+        this._win.setFullScreen(fullscreen);
         this._win.webContents.once('did-finish-load', () => {
             this._win.webContents.send('load_image', {
                 cwd: cwd,
