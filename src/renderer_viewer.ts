@@ -14,11 +14,24 @@ document.addEventListener('mousewheel', (event: Event) => {
     }
 });
 
-ipcRenderer.on('load_image', (_event, { cwd: cwd, filename: filename }) => {
+ipcRenderer.on('load_image', (_event, { cwd: cwd, filename: filename, index: index, maxPage: maxPage }) => {
     log.info(util.format('load_image(viewer): %s / %s', cwd, filename));
     const canvas = document.getElementById('canvas') as HTMLImageElement;
     canvas.src = path.join(cwd, filename);
+
+    var indicator = document.getElementById("pageIndicator") as HTMLDivElement;
+    indicator.innerHTML = util.format("%d / %d", index + 1, maxPage);
+
+    let pageSlider = document.getElementById("pageSlider") as HTMLInputElement;
+    pageSlider.max = util.format("%d", maxPage - 1);
+    pageSlider.value = util.format("%d", index);
 });
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function onChangeSlider() {
+    let slider = document.getElementById("pageSlider") as HTMLInputElement;
+    ipcRenderer.send('goto', parseInt(slider.value));
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function backToBrowser(): void {
