@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
-import settings from "electron-settings";
+import settings from 'electron-settings';
 import { Browser } from './browser';
 import util from 'util';
 import { FILE_TYPE, Util } from './util';
@@ -20,12 +20,12 @@ app.whenReady().then(async () => {
 
     if (process.argv.length == 3) {
         log.info('load viewer page');
-        var fullscreen = false;
-        if (await settings.get('fullscreen_viewer.enabled') === true) {
+        let fullscreen = false;
+        if ((await settings.get('fullscreen_viewer.enabled')) === true) {
             fullscreen = true;
         }
 
-        switch(Util.getFileType(process.argv[2])) {
+        switch (Util.getFileType(process.argv[2])) {
             case FILE_TYPE.IMAGE:
                 viewer = new ImageViewer(main.win());
                 break;
@@ -70,10 +70,10 @@ ipcMain.on('cd', (_event, dirname: string) => {
 ipcMain.on('view', async (_event, parameter: { cwd: string; filename: string }) => {
     log.info(util.format('view [url] %s [filename] %s', parameter.cwd, parameter.filename));
 
-    let fileType = Util.getFileType(parameter.filename);
+    const fileType = Util.getFileType(parameter.filename);
     log.info('fileType: ' + fileType);
 
-    switch(fileType) {
+    switch (fileType) {
         case FILE_TYPE.CBZ:
             viewer = new CBZViewer(main.win());
             break;
@@ -84,8 +84,8 @@ ipcMain.on('view', async (_event, parameter: { cwd: string; filename: string }) 
             break;
     }
 
-    var fullscreen = false;
-    if (await settings.get('fullscreen_viewer.enabled') === true) {
+    let fullscreen = false;
+    if ((await settings.get('fullscreen_viewer.enabled')) === true) {
         fullscreen = true;
     }
 
@@ -119,9 +119,9 @@ ipcMain.on('quit', (_event: Electron.Event) => {
 });
 
 ipcMain.on('save_settings', async (_event: Electron.Event, params: { fullscreen_viewer: boolean }) => {
-    log.info("save settings: " + JSON.stringify(params));
+    log.info('save settings: ' + JSON.stringify(params));
 
-    await settings.set('fullscreen_viewer',{
+    await settings.set('fullscreen_viewer', {
         enabled: params.fullscreen_viewer,
     });
 });

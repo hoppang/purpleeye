@@ -1,18 +1,18 @@
-import log from "electron-log";
+import log from 'electron-log';
 
 const FILE_TYPE = {
     CBZ: 1,
     IMAGE: 2,
-    UNKNOWN: 9999
-}
+    UNKNOWN: 9999,
+};
 
 class Util {
     static isImage(filename: string): boolean {
-        switch(Util.getFileType(filename)) {
+        switch (Util.getFileType(filename)) {
             case FILE_TYPE.IMAGE:
                 return true;
-                default:
-                    return false;
+            default:
+                return false;
         }
     }
 
@@ -42,4 +42,3 @@ class Util {
 
 export { FILE_TYPE, Util };
 export default Util;
-

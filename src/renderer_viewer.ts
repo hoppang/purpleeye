@@ -4,12 +4,11 @@ import util from 'util';
 import path from 'path';
 
 document.addEventListener('mousewheel', (event: Event) => {
-    var deltaY = (<WheelEvent>event).deltaY;
+    const deltaY = (<WheelEvent>event).deltaY;
 
     if (deltaY > 0) {
         next();
-    }
-    else if (deltaY < 0) {
+    } else if (deltaY < 0) {
         prev();
     }
 });
@@ -19,17 +18,17 @@ ipcRenderer.on('load_image', (_event, { cwd: cwd, filename: filename, index: ind
     const canvas = document.getElementById('canvas') as HTMLImageElement;
     canvas.src = path.join(cwd, filename);
 
-    var indicator = document.getElementById("pageIndicator") as HTMLDivElement;
-    indicator.innerHTML = util.format("%d / %d", index + 1, maxPage);
+    const indicator = document.getElementById('pageIndicator') as HTMLDivElement;
+    indicator.innerHTML = util.format('%d / %d', index + 1, maxPage);
 
-    let pageSlider = document.getElementById("pageSlider") as HTMLInputElement;
-    pageSlider.max = util.format("%d", maxPage - 1);
-    pageSlider.value = util.format("%d", index);
+    const pageSlider = document.getElementById('pageSlider') as HTMLInputElement;
+    pageSlider.max = util.format('%d', maxPage - 1);
+    pageSlider.value = util.format('%d', index);
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onChangeSlider() {
-    let slider = document.getElementById("pageSlider") as HTMLInputElement;
+    const slider = document.getElementById('pageSlider') as HTMLInputElement;
     ipcRenderer.send('goto', parseInt(slider.value));
 }
 
