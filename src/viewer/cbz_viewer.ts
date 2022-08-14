@@ -49,7 +49,7 @@ export default class CBZViewer implements IViewer {
         const entryName = this._entries[index].name;
         // 확장자를 안 붙여도 제대로 읽긴 하는데, 파일 타입 처리에 추가 시간이 소요되는지 확인 필요
         const outputFile = crypto
-            .createHash('md5')
+            .createHash('sha256')
             .update(this._zipPath + entryName)
             .digest('hex');
         const entryOut = path.join(tmpDir, outputFile);
