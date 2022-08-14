@@ -1,12 +1,12 @@
 import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
-import settings from 'electron-settings';
 import { Browser } from './browser';
 import util from 'util';
 import { FILE_TYPE, Util } from './util';
 import IViewer from './viewer/iviewer';
 import ImageViewer from './viewer/image_viewer';
 import CBZViewer from './viewer/cbz_viewer';
+import SettingsManager from './managers/settings_manager';
 
 let main: Main;
 let viewer: IViewer;
@@ -20,10 +20,6 @@ app.whenReady().then(async () => {
 
     if (process.argv.length == 3) {
         log.info('load viewer page');
-        let fullscreen = false;
-        if ((await settings.get('fullscreen_viewer.enabled')) === true) {
-            fullscreen = true;
-        }
 
         switch (Util.getFileType(process.argv[2])) {
             case FILE_TYPE.IMAGE:
@@ -33,7 +29,7 @@ app.whenReady().then(async () => {
                 viewer = new CBZViewer(main.win());
                 break;
         }
-        viewer.init(process.cwd(), process.argv[2], fullscreen);
+        viewer.init(process.cwd(), process.argv[2], SettingsManager.instance().isFullscreenViewer());
     } else {
         log.info('load index page');
         browser.loadIndexPage();
@@ -67,7 +63,7 @@ ipcMain.on('cd', (_event, dirname: string) => {
     browser.chdir(dirname);
 });
 
-ipcMain.on('view', async (_event, parameter: { cwd: string; filename: string }) => {
+ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
     log.info(util.format('view [url] %s [filename] %s', parameter.cwd, parameter.filename));
 
     const fileType = Util.getFileType(parameter.filename);
@@ -84,17 +80,16 @@ ipcMain.on('view', async (_event, parameter: { cwd: string; filename: string }) 
             break;
     }
 
-    let fullscreen = false;
-    if ((await settings.get('fullscreen_viewer.enabled')) === true) {
-        fullscreen = true;
-    }
-
-    viewer.init(parameter.cwd, parameter.filename, fullscreen);
+    viewer.init(parameter.cwd, parameter.filename, SettingsManager.instance().isFullscreenViewer());
 });
 
-ipcMain.on('backToBrowser', (_event: Electron.Event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ipcMain.on('backToBrowser', (event: IpcMainEvent) => {
     log.info('back to browser main');
     browser.loadIndexPage();
+    if (SettingsManager.instance().isFullscreenViewer() && SettingsManager.instance().quitFullscreenWhenBack()) {
+        main.win().setFullScreen(false);
+    }
 });
 
 ipcMain.on('goto', (event: IpcMainEvent, pageNo: number) => {
@@ -118,10 +113,18 @@ ipcMain.on('quit', (_event: Electron.Event) => {
     viewer.quit();
 });
 
-ipcMain.on('save_settings', async (_event: Electron.Event, params: { fullscreen_viewer: boolean }) => {
-    log.info('save settings: ' + JSON.stringify(params));
+ipcMain.on(
+    'save_settings',
+    (_event: Electron.Event, params: { fullscreenViewer: boolean; quitFullscreenWhenBack: boolean }) => {
+        log.info('save settings: ' + JSON.stringify(params));
+        SettingsManager.instance().setFullscreenViewer(params.fullscreenViewer);
+        SettingsManager.instance().setQuitFullscreenWhenBack(params.quitFullscreenWhenBack);
+    },
+);
 
-    await settings.set('fullscreen_viewer', {
-        enabled: params.fullscreen_viewer,
-    });
+ipcMain.on('settings_ready', (event: IpcMainEvent) => {
+    const isFullscreenViewer = SettingsManager.instance().isFullscreenViewer();
+    const quitFullscreenWhenBack = SettingsManager.instance().quitFullscreenWhenBack();
+
+    event.sender.send('response_settings_ready', { isFullscreenViewer, quitFullscreenWhenBack });
 });
