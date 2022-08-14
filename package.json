@@ -8,8 +8,40 @@
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix && js-beautify --type html view/*",
     "test": "npx jest",
-    "start": "tsc && electron ."
+    "start": "tsc && electron .",
+    "deploy:mac": "rm -rf ./dist && rm -rf ./build && npm run build && electron-builder --mac",
+    "postinstall": "electron-builder install-app-deps"
   },
+  "build": {
+		"productName": "PurpleEye",
+		"appId": "com.hoppang.purpleeye",
+		"asar": true,
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+		"protocols": {
+			"name": "PurpleEye",
+			"schemes": [
+				"PurpleEye"
+			]
+		},
+		"mac": {
+			"target": [
+				"default"
+			]
+		},
+		"dmg": {
+			"title": "PurpleEye"
+		},
+    "extraMetadata": {
+      "main": "dist/main.js"
+    },
+		"directories": {
+			"output": "build",
+			"app": "."
+		}
+	},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hoppang/purpleeye.git"
@@ -27,6 +59,7 @@
     "electron": "^20.0.1",
     "electron-builder": "^23.3.3",
     "electron-log": "^4.4.8",
+    "electron-webpack": "^2.8.2",
     "eslint": "^8.21.0",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^28.1.3",
