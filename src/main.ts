@@ -1,13 +1,14 @@
 import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
 import { Browser } from './browser';
-import util from 'util';
 import { FILE_TYPE, Util } from './util';
 import IViewer from './viewer/iviewer';
 import ImageViewer from './viewer/image_viewer';
 import CBZViewer from './viewer/cbz_viewer';
 import SettingsManager from './managers/settings_manager';
 import MainForm from './mainform';
+
+require('./ipc/main_from_settings');
 
 let main: MainForm;
 let viewer: IViewer;
@@ -89,20 +90,4 @@ ipcMain.on('toggleFullscreen', (event: Electron.Event) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 ipcMain.on('quit', (event: Electron.Event) => {
     viewer.quit();
-});
-
-ipcMain.on(
-    'save_settings',
-    (_event: Electron.Event, params: { fullscreenViewer: boolean; quitFullscreenWhenBack: boolean }) => {
-        log.info('save settings: ' + JSON.stringify(params));
-        SettingsManager.instance().setFullscreenViewer(params.fullscreenViewer);
-        SettingsManager.instance().setQuitFullscreenWhenBack(params.quitFullscreenWhenBack);
-    },
-);
-
-ipcMain.on('settings_ready', (event: IpcMainEvent) => {
-    const isFullscreenViewer = SettingsManager.instance().isFullscreenViewer();
-    const quitFullscreenWhenBack = SettingsManager.instance().quitFullscreenWhenBack();
-
-    event.sender.send('response_settings_ready', { isFullscreenViewer, quitFullscreenWhenBack });
 });
