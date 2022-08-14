@@ -16,10 +16,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Setup
+      run: npm install -g typescript
+           | npm install
     - name: Build
       run: tsc
-    - name: lint
+    - name: Lint
       run: npm run lint
-    - name: test
+    - name: Test
       run: npm test
 
