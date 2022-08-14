@@ -1,5 +1,7 @@
 import { BrowserWindow } from 'electron';
+import log from 'electron-log';
 import fs from 'fs';
+import SettingsManager from './managers/settings_manager';
 import { Util } from './util';
 
 /**
@@ -27,6 +29,10 @@ class Browser {
             this.ls(this._cwd);
             this._win.webContents.send('ls', { cwd: this._cwd, elements: { dirs: this.dirs, files: this.files } });
         });
+
+        if (SettingsManager.instance().isRememberLastDir()) {
+            this.chdir(SettingsManager.instance().getLastDir());
+        }
     }
 
     getIndexOf(filename: string): number {
@@ -35,6 +41,10 @@ class Browser {
         }
 
         return this.files.indexOf(filename);
+    }
+
+    cwd(): string {
+        return this._cwd;
     }
 
     chdir(newdir: string) {

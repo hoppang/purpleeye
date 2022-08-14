@@ -37,6 +37,12 @@ app.whenReady().then(async () => {
     }
 });
 
+app.on('will-quit', () => {
+    if (SettingsManager.instance().isRememberLastDir()) {
+        SettingsManager.instance().setLastDir(browser.cwd());
+    }
+});
+
 ipcMain.on('cd', (_event, dirname: string) => {
     log.info('cd to ' + dirname);
     browser.chdir(dirname);

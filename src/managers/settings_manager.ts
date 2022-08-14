@@ -28,6 +28,23 @@ class SettingsManager {
     setQuitFullscreenWhenBack(value: boolean): void {
         settings.setSync('quitFullscreenWhenBack', value);
     }
+
+    isRememberLastDir(): boolean {
+        return settings.getSync('rememberLastDir')?.valueOf() as boolean;
+    }
+
+    setRememberLastDir(value: boolean) {
+        settings.setSync('rememberLastDir', value);
+    }
+
+    getLastDir(): string {
+        return settings.getSync('lastDir')?.valueOf() as string;
+    }
+
+    setLastDir(dir: string): void {
+        log.info("SET LAST DIR: " + dir);
+        settings.setSync('lastDir', dir);
+    }
 }
 
 export default SettingsManager;
