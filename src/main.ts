@@ -101,6 +101,7 @@ ipcMain.on('toggleFullscreen', (_event: Electron.Event) => {
     viewer.toggleFullscreen();
 });
 
+// quit
 ipcMain.on('quit', (_event: Electron.Event) => {
     viewer.quit();
 });

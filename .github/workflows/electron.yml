@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     container:
       image: node:latest
@@ -17,12 +17,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Setup
-      run: npm install -g typescript
-           | npm install
+      run: npm install
     - name: Build
-      run: tsc
-    - name: lint
+      run: npx tsc
+    - name: Lint
       run: npm run lint
-    - name: test
+    - name: Test
       run: npm test
 
