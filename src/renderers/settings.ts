@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
+import util from 'util';
 
 const formSettings = document.querySelector('#form_settings');
 const fullscreenViewer = document.getElementById('fullscreen_viewer') as HTMLInputElement;
@@ -34,6 +35,9 @@ ipcRenderer.on('response_settings_ready', (event, params) => {
     quitFullscreenWhenBack.checked = params.quitFullscreenWhenBack;
     quitFullscreenWhenBack.disabled = !fullscreenViewer.checked;
     rememberLastDir.checked = params.rememberLastDir;
+
+    const cacheInfo = document.getElementById('cache_info') as HTMLDivElement;
+    cacheInfo.innerHTML = util.format('cache dir: [%s] size: [%d]', params.tempDir, params.tempDirSize);
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -44,4 +48,9 @@ function backToBrowser() {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function clearSettings() {
     ipcRenderer.send('clear_settings');
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function clearCache() {
+    ipcRenderer.send('clear_cache');
 }

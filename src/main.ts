@@ -30,7 +30,11 @@ app.whenReady().then(async () => {
                 viewer = new CBZViewer(main.win());
                 break;
         }
-        viewer.init(process.cwd(), process.argv[2], SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER));
+        viewer.init(
+            process.cwd(),
+            process.argv[2],
+            SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER),
+        );
     } else {
         log.info('load index page');
         browser.loadIndexPage(true);
@@ -62,14 +66,21 @@ ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
             break;
     }
 
-    viewer.init(parameter.cwd, parameter.filename, SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER));
+    viewer.init(
+        parameter.cwd,
+        parameter.filename,
+        SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER),
+    );
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 ipcMain.on('back_to_browser', (event: IpcMainEvent) => {
     log.info('back to browser main');
     browser.loadIndexPage(false);
-    if (SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER) && SettingsManager.instance().getBoolean(SettingsKey.QUIT_FULLSCREEN_WHEN_BACK)) {
+    if (
+        SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER) &&
+        SettingsManager.instance().getBoolean(SettingsKey.QUIT_FULLSCREEN_WHEN_BACK)
+    ) {
         main.win().setFullScreen(false);
     }
 });

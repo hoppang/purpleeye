@@ -1,5 +1,8 @@
-import { ipcMain, IpcMainEvent } from 'electron';
+import { app, ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
+import path from 'path';
+import fs from 'fs';
+import fastFolderSize from 'fast-folder-size';
 import { SettingsKey, SettingsManager } from '../managers/settings_manager';
 
 ipcMain.on(
@@ -21,9 +24,35 @@ ipcMain.on('settings_ready', (event: IpcMainEvent) => {
     const quitFullscreenWhenBack = SettingsManager.instance().getBoolean(SettingsKey.QUIT_FULLSCREEN_WHEN_BACK);
     const rememberLastDir = SettingsManager.instance().getBoolean(SettingsKey.REMEMBER_LAST_DIR);
 
-    event.sender.send('response_settings_ready', { isFullscreenViewer, quitFullscreenWhenBack, rememberLastDir });
+    const tempDir = path.join(app.getPath('temp'), 'purpleeye');
+
+    fastFolderSize(tempDir, (err, size: number | undefined) => {
+        const tempDirSize: number = size || 0;
+        event.sender.send('response_settings_ready', {
+            isFullscreenViewer,
+            quitFullscreenWhenBack,
+            rememberLastDir,
+            tempDir,
+            tempDirSize,
+        });
+    });
 });
 
 ipcMain.on('clear_settings', (event: IpcMainEvent) => {
     SettingsManager.instance().clear();
+});
+
+ipcMain.on('clear_cache', (event: IpcMainEvent) => {
+    log.info('todo: implement clear_cache');
+
+    const tempDir = path.join(app.getPath('temp'), 'purpleeye');
+    fs.readdir(tempDir, (err, files) => {
+        if (err) throw err;
+
+        for (const file of files) {
+            fs.unlink(path.join(tempDir, file), (err) => {
+                if (err) throw err;
+            });
+        }
+    });
 });
