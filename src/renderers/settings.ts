@@ -35,3 +35,7 @@ ipcRenderer.on('response_settings_ready', (event, params) => {
     quitFullscreenWhenBack.disabled = !fullscreenViewer.checked;
     rememberLastDir.checked = params.rememberLastDir;
 });
+
+function backToBrowser() {
+    ipcRenderer.send('backToBrowser');
+}
