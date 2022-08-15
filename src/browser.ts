@@ -1,5 +1,6 @@
 import { BrowserWindow } from 'electron';
 import fs from 'fs';
+import { SettingsKey, SettingsManager } from './managers/settings_manager';
 import { Util } from './util';
 
 /**
@@ -9,24 +10,29 @@ class Browser {
     private _cwd: string;
     private dirs: Array<string>;
     private files: Array<string>;
-    private index: number;
     private readonly _win: BrowserWindow;
 
     constructor(win: BrowserWindow) {
         this.dirs = new Array<string>();
         this.files = new Array<string>();
         this._cwd = process.cwd();
-        this.index = 0;
         this._win = win;
     }
 
-    loadIndexPage(): void {
+    loadIndexPage(isLaunch: boolean): void {
         this._win.loadFile('view/index.html');
         this._win.webContents.once('did-finish-load', () => {
             this._cwd = process.cwd();
             this.ls(this._cwd);
             this._win.webContents.send('ls', { cwd: this._cwd, elements: { dirs: this.dirs, files: this.files } });
         });
+
+        if (isLaunch && SettingsManager.instance().getBoolean(SettingsKey.REMEMBER_LAST_DIR)) {
+            const lastDir = SettingsManager.instance().getString(SettingsKey.LAST_DIR);
+            if (lastDir != null && lastDir.length > 0) {
+                this.chdir(SettingsManager.instance().getString(SettingsKey.LAST_DIR));
+            }
+        }
     }
 
     getIndexOf(filename: string): number {
@@ -35,6 +41,10 @@ class Browser {
         }
 
         return this.files.indexOf(filename);
+    }
+
+    cwd(): string {
+        return this._cwd;
     }
 
     chdir(newdir: string) {

@@ -4,12 +4,11 @@ import util from 'util';
 import path from 'path';
 
 document.addEventListener('mousewheel', (event: Event) => {
-    var deltaY = (<WheelEvent>event).deltaY;
+    const deltaY = (<WheelEvent>event).deltaY;
 
     if (deltaY > 0) {
         next();
-    }
-    else if (deltaY < 0) {
+    } else if (deltaY < 0) {
         prev();
     }
 });
@@ -19,24 +18,24 @@ ipcRenderer.on('load_image', (_event, { cwd: cwd, filename: filename, index: ind
     const canvas = document.getElementById('canvas') as HTMLImageElement;
     canvas.src = path.join(cwd, filename);
 
-    var indicator = document.getElementById("pageIndicator") as HTMLDivElement;
-    indicator.innerHTML = util.format("%d / %d", index + 1, maxPage);
+    const indicator = document.getElementById('pageIndicator') as HTMLDivElement;
+    indicator.innerHTML = util.format('%d / %d', index + 1, maxPage);
 
-    let pageSlider = document.getElementById("pageSlider") as HTMLInputElement;
-    pageSlider.max = util.format("%d", maxPage - 1);
-    pageSlider.value = util.format("%d", index);
+    const pageSlider = document.getElementById('pageSlider') as HTMLInputElement;
+    pageSlider.max = util.format('%d', maxPage - 1);
+    pageSlider.value = util.format('%d', index);
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onChangeSlider() {
-    let slider = document.getElementById("pageSlider") as HTMLInputElement;
+    const slider = document.getElementById('pageSlider') as HTMLInputElement;
     ipcRenderer.send('goto', parseInt(slider.value));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function backToBrowser(): void {
     log.info('back to browser renderer');
-    ipcRenderer.send('backToBrowser');
+    ipcRenderer.send('back_to_browser');
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -50,12 +49,10 @@ function toggleFullscreen(): void {
     ipcRenderer.send('toggleFullscreen');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function next(): void {
     ipcRenderer.send('next');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function prev(): void {
     ipcRenderer.send('prev');
 }

@@ -1,25 +1,28 @@
-import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
+import { app, ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
 import { Browser } from './browser';
-import util from 'util';
 import { FILE_TYPE, Util } from './util';
 import IViewer from './viewer/iviewer';
 import ImageViewer from './viewer/image_viewer';
 import CBZViewer from './viewer/cbz_viewer';
+import { SettingsKey, SettingsManager } from './managers/settings_manager';
+import MainForm from './mainform';
 
-let main: Main;
+require('./ipc/main_from_settings');
+
+let main: MainForm;
 let viewer: IViewer;
 let browser: Browser;
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
     log.info('arguments: ' + process.argv);
-    main = new Main();
+    main = new MainForm();
     browser = new Browser(main.win());
 
     if (process.argv.length == 3) {
         log.info('load viewer page');
-        // todo: cbz면 cbz viewer 사용
-        switch(Util.getFileType(process.argv[2])) {
+
+        switch (Util.getFileType(process.argv[2])) {
             case FILE_TYPE.IMAGE:
                 viewer = new ImageViewer(main.win());
                 break;
@@ -27,34 +30,22 @@ app.whenReady().then(() => {
                 viewer = new CBZViewer(main.win());
                 break;
         }
-        viewer.init(process.cwd(), process.argv[2]);
+        viewer.init(
+            process.cwd(),
+            process.argv[2],
+            SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER),
+        );
     } else {
         log.info('load index page');
-        browser.loadIndexPage();
+        browser.loadIndexPage(true);
     }
 });
 
-class Main {
-    private _win: BrowserWindow;
-
-    constructor() {
-        this._win = new BrowserWindow({
-            width: 1024,
-            height: 768,
-            minWidth: 800,
-            minHeight: 600,
-            // hack for 'require is not defined'
-            webPreferences: {
-                nodeIntegration: true,
-                contextIsolation: false,
-            },
-        });
+app.on('will-quit', () => {
+    if (SettingsManager.instance().getBoolean(SettingsKey.REMEMBER_LAST_DIR)) {
+        SettingsManager.instance().setString(SettingsKey.LAST_DIR, browser.cwd());
     }
-
-    win(): BrowserWindow {
-        return this._win;
-    }
-}
+});
 
 ipcMain.on('cd', (_event, dirname: string) => {
     log.info('cd to ' + dirname);
@@ -62,12 +53,9 @@ ipcMain.on('cd', (_event, dirname: string) => {
 });
 
 ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
-    log.info(util.format('view [url] %s [filename] %s', parameter.cwd, parameter.filename));
+    const fileType = Util.getFileType(parameter.filename);
 
-    let fileType = Util.getFileType(parameter.filename);
-    log.info('fileType: ' + fileType);
-
-    switch(fileType) {
+    switch (fileType) {
         case FILE_TYPE.CBZ:
             viewer = new CBZViewer(main.win());
             break;
@@ -77,31 +65,46 @@ ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
         default:
             break;
     }
-    viewer.init(parameter.cwd, parameter.filename);
+
+    viewer.init(
+        parameter.cwd,
+        parameter.filename,
+        SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER),
+    );
 });
 
-ipcMain.on('backToBrowser', (_event: Electron.Event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ipcMain.on('back_to_browser', (event: IpcMainEvent) => {
     log.info('back to browser main');
-    browser.loadIndexPage();
+    browser.loadIndexPage(false);
+    if (
+        SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER) &&
+        SettingsManager.instance().getBoolean(SettingsKey.QUIT_FULLSCREEN_WHEN_BACK)
+    ) {
+        main.win().setFullScreen(false);
+    }
 });
 
 ipcMain.on('goto', (event: IpcMainEvent, pageNo: number) => {
     viewer.goto(event.sender, pageNo);
 });
 
-ipcMain.on('next', (_event: Electron.Event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ipcMain.on('next', (event: Electron.Event) => {
     viewer.next();
 });
 
-ipcMain.on('prev', (_event: Electron.Event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ipcMain.on('prev', (event: Electron.Event) => {
     viewer.prev();
 });
 
-ipcMain.on('toggleFullscreen', (_event: Electron.Event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ipcMain.on('toggleFullscreen', (event: Electron.Event) => {
     viewer.toggleFullscreen();
 });
 
-// quit
-ipcMain.on('quit', (_event: Electron.Event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ipcMain.on('quit', (event: Electron.Event) => {
     viewer.quit();
 });

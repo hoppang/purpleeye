@@ -6,45 +6,45 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf ./dist && rm -rf ./build && rm -rf ./node_modules",
-    "lint": "eslint src/**/*.ts",
-    "format": "eslint src/**/*.ts --fix && js-beautify --type html view/*",
+    "lint": "gts lint './src/**/*.ts'",
+    "format": "gts fix './src/**/*.ts' && js-beautify --type html view/*",
     "test": "npx jest",
     "start": "tsc && electron .",
     "deploy:mac": "rm -rf ./dist && rm -rf ./build && npm run build && electron-builder --mac",
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
-		"productName": "PurpleEye",
-		"appId": "com.hoppang.purpleeye",
-		"asar": true,
+    "productName": "PurpleEye",
+    "appId": "com.hoppang.purpleeye",
+    "asar": true,
     "files": [
       "dist/**/*",
       "view/**/*",
       "css/**/*",
       "package.json"
     ],
-		"protocols": {
-			"name": "PurpleEye",
-			"schemes": [
-				"PurpleEye"
-			]
-		},
-		"mac": {
-			"target": [
-				"default"
-			]
-		},
-		"dmg": {
-			"title": "PurpleEye"
-		},
+    "protocols": {
+      "name": "PurpleEye",
+      "schemes": [
+        "PurpleEye"
+      ]
+    },
+    "mac": {
+      "target": [
+        "default"
+      ]
+    },
+    "dmg": {
+      "title": "PurpleEye"
+    },
     "extraMetadata": {
       "main": "dist/main.js"
     },
-		"directories": {
-			"output": "build",
-			"app": "."
-		}
-	},
+    "directories": {
+      "output": "build",
+      "app": "."
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hoppang/purpleeye.git"
@@ -57,16 +57,17 @@
   "homepage": "https://github.com/hoppang/purpleeye#readme",
   "dependencies": {
     "electron-log": "^4.4.8",
+    "electron-settings": "^4.0.2",
     "node-stream-zip": "^1.15.0"
   },
   "devDependencies": {
     "@types/jest": "^28.1.6",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
-    "@typescript-eslint/parser": "^5.32.0",
     "electron": "^20.0.1",
     "electron-builder": "^23.3.3",
-    "eslint": "^8.21.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "fast-folder-size": "^1.7.0",
+    "gts": "^3.1.0",
     "jest": "^28.1.3",
     "js-beautify": "^1.14.4",
     "prettier": "^2.7.1",

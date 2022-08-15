@@ -18,8 +18,9 @@ export default class CBZViewer implements IViewer {
         this._win = win;
     }
 
-    init(cwd: string, filename: string): void {
+    init(cwd: string, filename: string, fullscreen: boolean): void {
         this._win.loadFile('view/viewer.html');
+        this._win.setFullScreen(fullscreen);
         this._zipPath = path.join(cwd, filename);
         this._zip = new StreamZip({ file: this._zipPath, storeEntries: true });
 
@@ -61,6 +62,7 @@ export default class CBZViewer implements IViewer {
                 maxPage: this._entries.length,
             });
         } else {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             this._zip?.extract(entryName, entryOut, (err: any) => {
                 if (err == undefined) {
                     this._win.webContents.send('load_image', {
