@@ -23,3 +23,7 @@ ipcMain.on('settings_ready', (event: IpcMainEvent) => {
 
     event.sender.send('response_settings_ready', { isFullscreenViewer, quitFullscreenWhenBack, rememberLastDir });
 });
+
+ipcMain.on('clear_settings', (event: IpcMainEvent) => {
+    SettingsManager.instance().clear();
+});

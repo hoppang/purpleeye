@@ -66,7 +66,7 @@ ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-ipcMain.on('backToBrowser', (event: IpcMainEvent) => {
+ipcMain.on('back_to_browser', (event: IpcMainEvent) => {
     log.info('back to browser main');
     browser.loadIndexPage();
     if (SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER) && SettingsManager.instance().getBoolean(SettingsKey.QUIT_FULLSCREEN_WHEN_BACK)) {

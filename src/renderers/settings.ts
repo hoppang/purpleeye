@@ -39,3 +39,7 @@ ipcRenderer.on('response_settings_ready', (event, params) => {
 function backToBrowser() {
     ipcRenderer.send('backToBrowser');
 }
+
+function clearSettings() {
+    ipcRenderer.send('clear_settings');
+}
