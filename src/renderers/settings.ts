@@ -36,10 +36,12 @@ ipcRenderer.on('response_settings_ready', (event, params) => {
     rememberLastDir.checked = params.rememberLastDir;
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function backToBrowser() {
     ipcRenderer.send('back_to_browser');
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function clearSettings() {
     ipcRenderer.send('clear_settings');
 }

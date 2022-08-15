@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron';
 import fs from 'fs';
-import { SettingsKey, SettingsManager} from './managers/settings_manager';
+import { SettingsKey, SettingsManager } from './managers/settings_manager';
 import { Util } from './util';
 
 /**

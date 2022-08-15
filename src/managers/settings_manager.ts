@@ -7,7 +7,7 @@ const SettingsKey = {
     QUIT_FULLSCREEN_WHEN_BACK: 'quit_fullscreen_when_back',
     REMEMBER_LAST_DIR: 'remember_last_dir',
     LAST_DIR: 'last_dir',
-}
+};
 
 class SettingsManager {
     private static _instance: SettingsManager;
@@ -23,7 +23,7 @@ class SettingsManager {
     }
 
     clear(): void {
-        log.info("clear settings");
+        log.info('clear settings');
         this.setBoolean(SettingsKey.FULLSCREEN_VIEWER, false);
         this.setBoolean(SettingsKey.QUIT_FULLSCREEN_WHEN_BACK, false);
         this.setBoolean(SettingsKey.REMEMBER_LAST_DIR, false);
