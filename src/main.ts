@@ -5,7 +5,7 @@ import { FILE_TYPE, Util } from './util';
 import IViewer from './viewer/iviewer';
 import ImageViewer from './viewer/image_viewer';
 import CBZViewer from './viewer/cbz_viewer';
-import SettingsManager from './managers/settings_manager';
+import { SettingsKey, SettingsManager } from './managers/settings_manager';
 import MainForm from './mainform';
 
 require('./ipc/main_from_settings');
@@ -30,7 +30,7 @@ app.whenReady().then(async () => {
                 viewer = new CBZViewer(main.win());
                 break;
         }
-        viewer.init(process.cwd(), process.argv[2], SettingsManager.instance().isFullscreenViewer());
+        viewer.init(process.cwd(), process.argv[2], SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER));
     } else {
         log.info('load index page');
         browser.loadIndexPage();
@@ -38,8 +38,8 @@ app.whenReady().then(async () => {
 });
 
 app.on('will-quit', () => {
-    if (SettingsManager.instance().isRememberLastDir()) {
-        SettingsManager.instance().setLastDir(browser.cwd());
+    if (SettingsManager.instance().getBoolean(SettingsKey.REMEMBER_LAST_DIR)) {
+        SettingsManager.instance().setString(SettingsKey.LAST_DIR, browser.cwd());
     }
 });
 
@@ -62,14 +62,14 @@ ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
             break;
     }
 
-    viewer.init(parameter.cwd, parameter.filename, SettingsManager.instance().isFullscreenViewer());
+    viewer.init(parameter.cwd, parameter.filename, SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER));
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 ipcMain.on('backToBrowser', (event: IpcMainEvent) => {
     log.info('back to browser main');
     browser.loadIndexPage();
-    if (SettingsManager.instance().isFullscreenViewer() && SettingsManager.instance().quitFullscreenWhenBack()) {
+    if (SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER) && SettingsManager.instance().getBoolean(SettingsKey.QUIT_FULLSCREEN_WHEN_BACK)) {
         main.win().setFullScreen(false);
     }
 });

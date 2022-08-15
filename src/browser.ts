@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron';
 import fs from 'fs';
-import SettingsManager from './managers/settings_manager';
+import { SettingsKey, SettingsManager} from './managers/settings_manager';
 import { Util } from './util';
 
 /**
@@ -27,8 +27,11 @@ class Browser {
             this._win.webContents.send('ls', { cwd: this._cwd, elements: { dirs: this.dirs, files: this.files } });
         });
 
-        if (SettingsManager.instance().isRememberLastDir()) {
-            this.chdir(SettingsManager.instance().getLastDir());
+        if (SettingsManager.instance().getBoolean(SettingsKey.REMEMBER_LAST_DIR)) {
+            const lastDir = SettingsManager.instance().getString(SettingsKey.LAST_DIR);
+            if (lastDir != null && lastDir.length > 0) {
+                this.chdir(SettingsManager.instance().getString(SettingsKey.LAST_DIR));
+            }
         }
     }
 

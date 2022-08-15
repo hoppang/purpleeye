@@ -1,6 +1,13 @@
 import log from 'electron-log';
 import settings from 'electron-settings';
 
+const SettingsKey = {
+    FULLSCREEN_VIEWER: 'fullscreen_viewer',
+    QUIT_FULLSCREEN_WHEN_BACK: 'quit_fullscreen_when_back',
+    REMEMBER_LAST_DIR: 'remember_last_dir',
+    LAST_DIR: 'last_dir',
+}
+
 class SettingsManager {
     private static _instance: SettingsManager;
     private constructor() {
@@ -11,39 +18,21 @@ class SettingsManager {
         return this._instance || (this._instance = new SettingsManager());
     }
 
-    isFullscreenViewer(): boolean {
-        const value = settings.getSync('fullscreenViewer');
-        return value?.valueOf() as boolean;
+    getBoolean(key: string): boolean {
+        return settings.getSync(key)?.valueOf() as boolean;
     }
 
-    setFullscreenViewer(value: boolean): void {
-        log.info('setFullscreenViewer: ' + value);
-        settings.setSync('fullscreenViewer', value);
+    getString(key: string): string {
+        return settings.getSync(key)?.valueOf() as string;
     }
 
-    quitFullscreenWhenBack(): boolean {
-        return settings.getSync('quitFullscreenWhenBack')?.valueOf() as boolean;
+    setBoolean(key: string, value: boolean): void {
+        settings.setSync(key, value);
     }
 
-    setQuitFullscreenWhenBack(value: boolean): void {
-        settings.setSync('quitFullscreenWhenBack', value);
-    }
-
-    isRememberLastDir(): boolean {
-        return settings.getSync('rememberLastDir')?.valueOf() as boolean;
-    }
-
-    setRememberLastDir(value: boolean) {
-        settings.setSync('rememberLastDir', value);
-    }
-
-    getLastDir(): string {
-        return settings.getSync('lastDir')?.valueOf() as string;
-    }
-
-    setLastDir(dir: string): void {
-        settings.setSync('lastDir', dir);
+    setString(key: string, value: string): void {
+        settings.setSync(key, value);
     }
 }
 
-export default SettingsManager;
+export { SettingsKey, SettingsManager };
