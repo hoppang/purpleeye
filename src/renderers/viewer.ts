@@ -35,7 +35,7 @@ function onChangeSlider() {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function backToBrowser(): void {
     log.info('back to browser renderer');
-    ipcRenderer.send('backToBrowser');
+    ipcRenderer.send('back_to_browser');
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

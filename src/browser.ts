@@ -19,7 +19,7 @@ class Browser {
         this._win = win;
     }
 
-    loadIndexPage(): void {
+    loadIndexPage(isLaunch: boolean): void {
         this._win.loadFile('view/index.html');
         this._win.webContents.once('did-finish-load', () => {
             this._cwd = process.cwd();
@@ -27,7 +27,7 @@ class Browser {
             this._win.webContents.send('ls', { cwd: this._cwd, elements: { dirs: this.dirs, files: this.files } });
         });
 
-        if (SettingsManager.instance().getBoolean(SettingsKey.REMEMBER_LAST_DIR)) {
+        if (isLaunch && SettingsManager.instance().getBoolean(SettingsKey.REMEMBER_LAST_DIR)) {
             const lastDir = SettingsManager.instance().getString(SettingsKey.LAST_DIR);
             if (lastDir != null && lastDir.length > 0) {
                 this.chdir(SettingsManager.instance().getString(SettingsKey.LAST_DIR));
