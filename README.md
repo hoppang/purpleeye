@@ -20,3 +20,9 @@ npm start
 ```
 npm test
 ```
+
+## Deploy app
+
+```
+npm run deploy:mac
+```
