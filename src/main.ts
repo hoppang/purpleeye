@@ -7,38 +7,38 @@ import ImageViewer from './viewer/image_viewer';
 import CBZViewer from './viewer/cbz_viewer';
 import { SettingsKey, SettingsManager } from './managers/settings_manager';
 import MainForm from './mainform';
+import path from 'path';
 
 require('./ipc/main_from_settings');
 
 let main: MainForm;
 let viewer: IViewer;
 let browser: Browser;
+const initOpenFileQueue: string[] = [];
 
 app.whenReady().then(async () => {
     log.info('arguments: ' + process.argv);
     main = new MainForm();
     browser = new Browser(main.win());
 
-    if (process.argv.length == 3) {
-        log.info('load viewer page');
-
-        switch (Util.getFileType(process.argv[2])) {
-            case FILE_TYPE.IMAGE:
-                viewer = new ImageViewer(main.win());
-                break;
-            case FILE_TYPE.CBZ:
-                viewer = new CBZViewer(main.win());
-                break;
-        }
-        viewer.init(
-            process.cwd(),
-            process.argv[2],
-            SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER),
-        );
-    } else {
-        log.info('load index page');
-        browser.loadIndexPage(true);
+    if (initOpenFileQueue.length > 0) {
+        const cwd = path.dirname(initOpenFileQueue[0]);
+        const filename = path.basename(initOpenFileQueue[0]);
+        initViewer({ cwd: cwd, filename: filename });
     }
+});
+
+app.on('will-finish-launching', () => {
+    app.on('open-file', (event, file) => {
+        if (app.isReady() === false) {
+            initOpenFileQueue.push(file);
+        } else {
+            const cwd = path.dirname(file);
+            const filename = path.basename(file);
+            initViewer({ cwd: cwd, filename: filename });
+        }
+        event.preventDefault();
+    });
 });
 
 app.on('will-quit', () => {
@@ -47,12 +47,7 @@ app.on('will-quit', () => {
     }
 });
 
-ipcMain.on('cd', (_event, dirname: string) => {
-    log.info('cd to ' + dirname);
-    browser.chdir(dirname);
-});
-
-ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
+function initViewer(parameter: { cwd: string; filename: string }) {
     const fileType = Util.getFileType(parameter.filename);
 
     switch (fileType) {
@@ -66,11 +61,21 @@ ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
             break;
     }
 
+    browser.chdir(parameter.cwd, false);
     viewer.init(
         parameter.cwd,
         parameter.filename,
         SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER),
     );
+}
+
+ipcMain.on('cd', (_event, dirname: string) => {
+    log.info('cd to ' + dirname);
+    browser.chdir(dirname, true);
+});
+
+ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
+    initViewer(parameter);
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
