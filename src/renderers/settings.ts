@@ -37,7 +37,7 @@ ipcRenderer.on('response_settings_ready', (event, params) => {
     rememberLastDir.checked = params.rememberLastDir;
 
     const cacheInfo = document.getElementById('cache_info') as HTMLDivElement;
-    cacheInfo.innerHTML = util.format('cache dir: [%s] size: [%d]', params.tempDir, params.tempDirSize);
+    cacheInfo.innerHTML = util.format('cache size: [%d]', params.tempDirSize);
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

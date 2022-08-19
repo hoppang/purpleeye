@@ -6,16 +6,16 @@ ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: { dirs: Ar
     const dirs = data.elements.dirs;
     const files = data.elements.files;
 
-    let str = '<table style="border: 2px;">';
+    let str = '';
     // 항상 상위 디렉토리는 표시
     str = util.format(
-        '%s\n<tr><td><a href="#" class="listitem_dir" onclick="changeDir(\'..\');">..</a></td></tr>',
+        '%s\n<div class="listitem listitem_dir" onclick="changeDir(\'..\');"><a href="#">..</a></div>',
         str,
     );
 
     for (let i = 0; i < dirs.length; i++) {
         str = util.format(
-            '%s\n<tr><td><a href="#" class="listitem_dir" onclick="changeDir(\'%s\');">%s</a></td></tr>',
+            '%s\n<div class="listitem listitem_dir" onclick="changeDir(\'%s\');"><a href="#">%s</a></div>',
             str,
             dirs[i],
             dirs[i],
@@ -24,7 +24,7 @@ ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: { dirs: Ar
 
     for (let i = 0; i < files.length; i++) {
         str = util.format(
-            '%s\n<tr><td><a href="#" class="listitem_file" onclick="view(\'%s\', \'%s\');">%s</a></td></tr>',
+            '%s\n<div class="listitem listitem_file" onclick="view(\'%s\', \'%s\');"><a href="#">%s</a></div>',
             str,
             cwd,
             files[i],
@@ -32,9 +32,7 @@ ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: { dirs: Ar
         );
     }
 
-    str = str.concat('</table>');
-
-    const header = document.getElementById('itemlist_header') as HTMLDivElement;
+    const header = document.getElementById('itemlist_cwd') as HTMLDivElement;
     header.innerText = cwd;
 
     const content = document.getElementById('itemlist_content') as HTMLDivElement;

@@ -2,13 +2,20 @@
 
 <head>
     <title>PurpleEye</title>
+    <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/browser.css">
 </head>
 
 <body>
-    <a href="settings.html">Settings</a>
-    <div id="itemlist_header"></div>
-    <div id="itemlist_content" style="display:table"></div>
+    <div id="itemlist_outer">
+        <div id="itemlist_inner">
+            <div id="itemlist_header">
+                <div id="itemlist_cwd"></div>
+                <div id="itemlist_header_right"><a href="settings.html">Settings</a></div>
+            </div>
+            <div id="itemlist_content"></div>
+        </div>
+    </div>
 
     <script>
         // hack for 'exports is not defined'

@@ -2,6 +2,7 @@
 
 <head>
     <title>PurpleEye</title>
+    <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/viewer.css">
 </head>
 
@@ -10,11 +11,11 @@
         <img id="canvas" />
     </div>
     <div id="controlBar">
-        <a href="#" onclick="backToBrowser();">Back</a>
-        <a href="#" onclick="quit();">Quit</a>
-        <a href="#" onclick="toggleFullscreen();">Fullscreen</a>
-        <a href="#" onclick="next();">Next</a>
-        <a href="#" onclick="prev();">Prev</a>
+        <a href="#" onclick="backToBrowser();"><img class="naviButton" src="../res/back.png"></a>
+        <a href="#" onclick="prev();"><img class="naviButton" src="../res/prev_small.png"></a>
+        <a href="#" onclick="next();"><img class="naviButton" src="../res/next_small.png"></a>
+        <a href="#" onclick="toggleFullscreen();"><img class="naviButton" src="../res/fullscreen.png"></a>
+        <a href="#" onclick="quit();"><img class="naviButton" src="../res/quit.png"></a>
         <div id="pageSliderBox">
             <input type="range" id="pageSlider" min="0" max="0" onchange="onChangeSlider();"></input>
             <div id="pageIndicator"></div>

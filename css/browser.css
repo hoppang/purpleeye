@@ -1,7 +1,63 @@
-.listitem_dir {
-    color: red;
+#itemlist_outer {
+    width: 100%;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 
-.listitem_file {
-    color: rgb(57, 57, 255);
+#itemlist_inner {
+    width: 80%;
+    margin: auto;
+    border: 1px solid #f0e0f0;
+    border-radius: 0.4em;
+    padding: 0.4em;
+    box-shadow: 0 0.1em 0.1em #a15c9f30;
+    background-color: #f0f0f0;
+}
+
+div#itemlist_content {
+    display: block;
+}
+
+#itemlist_cwd {
+    display: inline;
+}
+
+#itemlist_header_right {
+    float: right;
+    vertical-align: middle;
+}
+
+#itemlist_header_right a {
+    color: #a15c9f;
+    text-decoration: none;
+}
+
+.listitem {
+    display: block;
+    width: 100%;
+    padding: 0;
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+    margin: 0;
+    border-top: 1px solid #f0e0f0;
+}
+
+.listitem_dir a {
+    color: #2b2b52;
+    text-decoration: none;
+}
+
+.listitem_dir:hover {
+    background-color: #eeeef5;
+    text-shadow: 0 0.1em 0.1em #bbbbe5;
+}
+
+.listitem_file a {
+    color: #744272;
+    text-decoration: none;
+}
+
+.listitem_file:hover {
+    background-color: #eeeef5;
+    text-shadow: 0 0.1em 0.1em #d9c0d9;
 }
