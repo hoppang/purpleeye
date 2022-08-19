@@ -10,41 +10,8 @@
     "format": "gts fix './src/**/*.ts' && js-beautify --type html view/*",
     "test": "npx jest",
     "start": "tsc && electron .",
-    "deploy:mac": "rm -rf ./dist && rm -rf ./build && npm run build && electron-builder --mac",
+    "deploy:mac": "rm -rf ./dist && rm -rf ./build && npm run build && electron-builder --config electron-builder-config.json",
     "postinstall": "electron-builder install-app-deps"
-  },
-  "build": {
-    "productName": "PurpleEye",
-    "appId": "com.hoppang.purpleeye",
-    "asar": true,
-    "files": [
-      "dist/**/*",
-      "view/**/*",
-      "css/**/*",
-      "res/**/*",
-      "package.json"
-    ],
-    "protocols": {
-      "name": "PurpleEye",
-      "schemes": [
-        "PurpleEye"
-      ]
-    },
-    "mac": {
-      "target": [
-        "default"
-      ]
-    },
-    "dmg": {
-      "title": "PurpleEye"
-    },
-    "extraMetadata": {
-      "main": "dist/main.js"
-    },
-    "directories": {
-      "output": "build",
-      "app": "."
-    }
   },
   "repository": {
     "type": "git",

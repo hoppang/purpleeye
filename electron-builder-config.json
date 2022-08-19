@@ -1,0 +1,40 @@
+{
+    "productName": "PurpleEye",
+    "appId": "com.hoppang.purpleeye",
+    "asar": true,
+    "files": [
+        "dist/**/*",
+        "view/**/*",
+        "css/**/*",
+        "res/**/*",
+        "package.json"
+    ],
+    "fileAssociations": [
+        {
+        "ext": "cbz",
+        "name": "Comics archives",
+        "role": "Viewer"
+        }
+    ],
+    "protocols": {
+        "name": "PurpleEye",
+        "schemes": [
+            "PurpleEye"
+        ]
+    },
+    "mac": {
+        "target": [
+            "default"
+        ]
+    },
+    "dmg": {
+        "title": "PurpleEye"
+    },
+    "extraMetadata": {
+        "main": "dist/main.js"
+    },
+    "directories": {
+        "output": "build",
+        "app": "."
+    }
+}
