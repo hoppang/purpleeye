@@ -30,7 +30,7 @@ class Browser {
         if (isLaunch && SettingsManager.instance().getBoolean(SettingsKey.REMEMBER_LAST_DIR)) {
             const lastDir = SettingsManager.instance().getString(SettingsKey.LAST_DIR);
             if (lastDir != null && lastDir.length > 0) {
-                this.chdir(SettingsManager.instance().getString(SettingsKey.LAST_DIR));
+                this.chdir(SettingsManager.instance().getString(SettingsKey.LAST_DIR), true);
             }
         }
     }
@@ -47,11 +47,13 @@ class Browser {
         return this._cwd;
     }
 
-    chdir(newdir: string) {
+    chdir(newdir: string, doList: boolean) {
         process.chdir(newdir);
         this._cwd = process.cwd();
-        this.ls(this._cwd);
-        this._win.webContents.send('ls', { cwd: this._cwd, elements: { dirs: this.dirs, files: this.files } });
+        if (doList) {
+            this.ls(this._cwd);
+            this._win.webContents.send('ls', { cwd: this._cwd, elements: { dirs: this.dirs, files: this.files } });
+        }
     }
 
     /**
