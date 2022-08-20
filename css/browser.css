@@ -1,7 +1,7 @@
 #itemlist_outer {
     width: 100%;
-    margin-top: 1em;
-    margin-bottom: 1em;
+    padding-top: 4em;
+    padding-bottom: 2em;
 }
 
 #itemlist_inner {
@@ -20,16 +20,6 @@ div#itemlist_content {
 
 #itemlist_cwd {
     display: inline;
-}
-
-#itemlist_header_right {
-    float: right;
-    vertical-align: middle;
-}
-
-#itemlist_header_right a {
-    color: #a15c9f;
-    text-decoration: none;
 }
 
 .listitem {

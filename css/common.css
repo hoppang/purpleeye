@@ -5,3 +5,27 @@ html, body {
     padding: 0;
     background-color: #808080;
 }
+
+.menubar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2em;
+    margin: 0;
+    padding-top: 1em;
+    padding-left: 10%;
+    background-color: #a15c9ff0;
+}
+
+.menuitem {
+    text-decoration: none;
+    color: #efd1ee;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.menuitem:hover {
+    color:#ffffff;
+    transition: 200ms;
+}

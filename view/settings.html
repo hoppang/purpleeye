@@ -7,19 +7,25 @@
 </head>
 
 <body>
-    <form id="form_settings" action="#">
-        <a href="#" onclick="backToBrowser();">Back to Browser</a>
-        <a href="#" onclick="clearSettings();">Clear Settings</a>
-        <ul>
-            <li><input type="checkbox" id="fullscreen_viewer" name="fullscreen_viewer" checked>Fullscreen Viewer</input></li>
-            <li><input type="checkbox" id="quit_fullscreen_when_back" name="quit_fullscreen_when_back" checked>Quit fullscreen when back to browser</input></li>
-            <li><input type="checkbox" id="remember_last_dir" name="remember_last_dir" checked>Remember last directory</input></li>
-            <li>
-                <div id="cache_info"></div><a href="#" onclick="clearCache();">Clear Cache</a>
-            </li>
-            <li><input type="submit" id="save_settings" name="save_settings" value="Save Settings"></li>
-        </ul>
-    </form>
+    <div class="menubar">
+        <a class="menuitem" href="#" onclick="backToBrowser();">Local</a>
+        <a class="menuitem" href="remote.html">Remote</a>
+        <a class="menuitem" href="#">Settings</a>
+    </div>
+    <div id="form_outer">
+        <form id="form_settings" action="#">
+            <a href="#" onclick="clearSettings();">Clear Settings</a>
+            <ul>
+                <li><input type="checkbox" id="fullscreen_viewer" name="fullscreen_viewer" checked>Fullscreen Viewer</input></li>
+                <li><input type="checkbox" id="quit_fullscreen_when_back" name="quit_fullscreen_when_back" checked>Quit fullscreen when back to browser</input></li>
+                <li><input type="checkbox" id="remember_last_dir" name="remember_last_dir" checked>Remember last directory</input></li>
+                <li>
+                    <div id="cache_info"></div><a href="#" onclick="clearCache();">Clear Cache</a>
+                </li>
+                <li><input type="submit" id="save_settings" name="save_settings" value="Save Settings"></li>
+            </ul>
+        </form>
+    </div>
 
     <script>
         // hack for 'exports is not defined'
