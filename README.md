@@ -10,7 +10,6 @@ Windows could be supported, but not guaranteed.
 ## Run dev version
 
 ```
-npm install -g typescript
 npm install
 npm start
 ```
