@@ -27,7 +27,8 @@
     "electron-log": "^4.4.8",
     "electron-settings": "^4.0.2",
     "fast-folder-size": "^1.7.0",
-    "node-stream-zip": "^1.15.0"
+    "node-stream-zip": "^1.15.0",
+    "webdav": "^4.10.0"
   },
   "devDependencies": {
     "@microsoft/tsdoc": "^0.14.1",
