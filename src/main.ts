@@ -9,6 +9,10 @@ import { SettingsKey, SettingsManager } from './managers/settings_manager';
 import MainForm from './mainform';
 import path from 'path';
 
+/**
+ * 메인 모듈 (index)
+ */
+
 require('./ipc/main_from_settings');
 
 let main: MainForm;
@@ -50,6 +54,10 @@ app.on('will-quit', () => {
     }
 });
 
+/**
+ * 뷰어 초기화 후 로딩
+ * @param parameter cwd: 디렉토리, filename: 파일명
+ */
 function initViewer(parameter: { cwd: string; filename: string }) {
     const fileType = Util.getFileType(parameter.filename);
 
