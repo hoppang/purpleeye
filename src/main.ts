@@ -25,6 +25,9 @@ app.whenReady().then(async () => {
         const cwd = path.dirname(initOpenFileQueue[0]);
         const filename = path.basename(initOpenFileQueue[0]);
         initViewer({ cwd: cwd, filename: filename });
+    } else {
+        log.info('load index page');
+        browser.loadIndexPage(true);
     }
 });
 
