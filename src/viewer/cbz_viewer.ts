@@ -4,6 +4,7 @@ import StreamZip from 'node-stream-zip';
 import path from 'path';
 import crypto from 'crypto';
 import fs from 'fs';
+import Util from '../util';
 
 export default class CBZViewer implements IViewer {
     private _zipPath?: string;
@@ -30,7 +31,9 @@ export default class CBZViewer implements IViewer {
     private onLoadCBZ(): void {
         if (this._zip != undefined) {
             for (const entry of Object.values(this._zip.entries())) {
-                this._entries.push(entry);
+                if (entry.isDirectory === false && Util.isImage(entry.name)) {
+                    this._entries.push(entry);
+                }
             }
 
             this._win.webContents.once('did-finish-load', () => {
