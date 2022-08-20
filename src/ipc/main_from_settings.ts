@@ -43,8 +43,6 @@ ipcMain.on('clear_settings', (event: IpcMainEvent) => {
 });
 
 ipcMain.on('clear_cache', (event: IpcMainEvent) => {
-    log.info('todo: implement clear_cache');
-
     const tempDir = path.join(app.getPath('temp'), 'purpleeye');
     fs.readdir(tempDir, (err, files) => {
         if (err) throw err;

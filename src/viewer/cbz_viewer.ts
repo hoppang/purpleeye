@@ -5,6 +5,7 @@ import path from 'path';
 import crypto from 'crypto';
 import fs from 'fs';
 import Util from '../util';
+import log from 'electron-log';
 
 export default class CBZViewer implements IViewer {
     private _zipPath?: string;
@@ -58,6 +59,7 @@ export default class CBZViewer implements IViewer {
         const entryOut = path.join(tmpDir, outputFile);
 
         if (fs.existsSync(entryOut)) {
+            log.info('cached file exists');
             this._win.webContents.send('load_image', {
                 cwd: '',
                 filename: entryOut,
@@ -65,6 +67,7 @@ export default class CBZViewer implements IViewer {
                 maxPage: this._entries.length,
             });
         } else {
+            log.info('cached file not exists. extracting...');
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             this._zip?.extract(entryName, entryOut, (err: any) => {
                 if (err == undefined) {
