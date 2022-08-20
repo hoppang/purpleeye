@@ -1,6 +1,6 @@
 import { BrowserWindow, WebContents } from 'electron';
 import fs from 'fs';
-import IViewer from './iviewer';
+import IViewer from '../interfaces/iviewer';
 import Util from '../util';
 
 class ImageViewer implements IViewer {

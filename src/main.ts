@@ -2,7 +2,7 @@ import { app, ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
 import { Browser } from './browser';
 import { FILE_TYPE, Util } from './util';
-import IViewer from './viewer/iviewer';
+import IViewer from './interfaces/iviewer';
 import ImageViewer from './viewer/image_viewer';
 import CBZViewer from './viewer/cbz_viewer';
 import { SettingsKey, SettingsManager } from './managers/settings_manager';

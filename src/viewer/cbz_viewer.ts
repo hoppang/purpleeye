@@ -1,5 +1,5 @@
 import { app, BrowserWindow, WebContents } from 'electron';
-import IViewer from './iviewer';
+import IViewer from '../interfaces/iviewer';
 import StreamZip from 'node-stream-zip';
 import path from 'path';
 import crypto from 'crypto';
