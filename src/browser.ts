@@ -7,6 +7,9 @@ import { Util } from './util';
  * 파일/디렉토리 목록 등을 관리하는 모듈
  */
 class Browser {
+    /**
+     * 현재 디렉토리
+     */
     private _cwd: string;
     private dirs: Array<string>;
     private files: Array<string>;

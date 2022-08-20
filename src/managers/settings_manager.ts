@@ -9,6 +9,9 @@ const SettingsKey = {
     LAST_DIR: 'last_dir',
 };
 
+/**
+ * 설정 관리 클래스. 싱글턴
+ */
 class SettingsManager {
     private static _instance: SettingsManager;
     private constructor() {
