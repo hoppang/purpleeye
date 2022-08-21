@@ -1,12 +1,12 @@
 import { BrowserWindow } from 'electron';
 import fs from 'fs';
-import { SettingsKey, SettingsManager } from './managers/settings_manager';
-import { Util } from './util';
+import { SettingsKey, SettingsManager } from '../managers/settings_manager';
+import { Util } from '../util';
 
 /**
- * 파일/디렉토리 목록 등을 관리하는 모듈
+ * 로컬 장치의 파일시스템에 접근
  */
-class Browser {
+class LocalBrowser {
     /**
      * 현재 디렉토리
      */
@@ -27,15 +27,16 @@ class Browser {
         this._win.webContents.once('did-finish-load', () => {
             this._cwd = process.cwd();
             this.ls(this._cwd);
-            this._win.webContents.send('ls', { cwd: this._cwd, elements: { dirs: this.dirs, files: this.files } });
-        });
 
-        if (isLaunch && SettingsManager.instance().getBoolean(SettingsKey.REMEMBER_LAST_DIR)) {
-            const lastDir = SettingsManager.instance().getString(SettingsKey.LAST_DIR);
-            if (lastDir != null && lastDir.length > 0) {
-                this.chdir(SettingsManager.instance().getString(SettingsKey.LAST_DIR), true);
+            if (isLaunch && SettingsManager.instance().getBoolean(SettingsKey.REMEMBER_LAST_DIR)) {
+                const lastDir = SettingsManager.instance().getString(SettingsKey.LAST_DIR);
+                if (lastDir != null && lastDir.length > 0) {
+                    this._cwd = lastDir;
+                }
             }
-        }
+
+            this.chdir(this._cwd, true);
+        });
     }
 
     getIndexOf(filename: string): number {
@@ -86,4 +87,4 @@ class Browser {
     }
 }
 
-export { Browser };
+export default LocalBrowser;

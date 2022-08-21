@@ -1,6 +1,6 @@
 import { app, ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
-import { Browser } from './browser';
+import LocalBrowser from './browsers/local_browser';
 import { FILE_TYPE, Util } from './util';
 import IViewer from './interfaces/iviewer';
 import ImageViewer from './viewer/image_viewer';
@@ -17,13 +17,13 @@ require('./ipc/main_from_settings');
 
 let main: MainForm;
 let viewer: IViewer;
-let browser: Browser;
+let browser: LocalBrowser;
 const initOpenFileQueue: string[] = [];
 
 app.whenReady().then(async () => {
     log.info('arguments: ' + process.argv);
     main = new MainForm();
-    browser = new Browser(main.win());
+    browser = new LocalBrowser(main.win());
 
     if (initOpenFileQueue.length > 0) {
         const cwd = path.dirname(initOpenFileQueue[0]);
