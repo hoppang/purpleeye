@@ -18,8 +18,7 @@ class RemoteBrowser {
     loadIndexPage(): void {
         MainForm.win().loadFile('view/remote.html');
         MainForm.win().webContents.once('did-finish-load', () => {
-            const serverList: Array<ServerInfo> = SettingsManager.instance().loadServerList();
-            MainForm.win().webContents.send('ls-server', serverList);
+            SettingsManager.instance().loadServerList(MainForm.win(), 'ls-server');
         });
     }
 

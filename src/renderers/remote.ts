@@ -4,11 +4,13 @@ import util from 'util';
 import { ServerInfo } from '../managers/settings_manager';
 
 ipcRenderer.on('ls-server', function (event: IpcRendererEvent, serverList: Array<ServerInfo>) {
-    log.info('ls-server remote browser');
-    let str = util.format('<div class="listitem listitem_dir" onclick="addNewServer();"><a href="#">Add New Server</a></div>');
+    log.info('ls-server remote browser ' + serverList.length);
+    let str = util.format(
+        '<div class="listitem listitem_dir" onclick="addNewServer();"><a href="#">Add New Server</a></div>',
+    );
 
     for (const server of serverList) {
-        str = util.format('%s\n%s', str, dirItemStr(server.name));
+        str = util.format('%s\n%s', str, serverItemStr(server.name, server.url, server.id));
     }
 
     log.info('str = ' + str);
@@ -54,9 +56,28 @@ function dirItemStr(dirName: string): string {
         dirName,
     );
 }
+
+function serverItemStr(serverName: string, url: string, serverId: number) {
+    return util.format(
+        '<div class="listitem listitem_dir"><a href="#" onclick="connect(%d);">%s (%s)</a> <a href="#" class="edit_server" onclick="edit(%d);">edit</a> <a href="#" class="delete_server" onclick="del_server(%d);">delete</a></div>',
+        serverId,
+        serverName,
+        url,
+        serverId,
+        serverId
+    );
 }
 
 function addNewServer(): void {
     log.info('addNewServer');
     ipcRenderer.send('load_add_new_server_page');
+}
+
+function connect(serverId: number): void {
+    log.info('connect ' + serverId);
+}
+
+function del_server(serverId: number): void {
+    log.info('delete ' + serverId);
+    ipcRenderer.send('delete_server', serverId);
 }

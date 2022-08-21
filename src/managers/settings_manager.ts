@@ -1,6 +1,8 @@
-import { app } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import log from 'electron-log';
 import settings from 'electron-settings';
+import sqlite3, { RunResult } from 'sqlite3';
+import MainForm from '../mainform';
 
 const SettingsKey = {
     FULLSCREEN_VIEWER: 'fullscreen_viewer',
@@ -10,6 +12,7 @@ const SettingsKey = {
 };
 
 class ServerInfo {
+    public id!: number;
     public name!: string;
     public url!: string;
     public username!: string;
@@ -26,14 +29,52 @@ class SettingsManager {
         if (this.getString(SettingsKey.LAST_DIR) === undefined) {
             this.setString(SettingsKey.LAST_DIR, app.getPath('home'));
         }
+
+        this.db = new sqlite3.Database('settings.db', (err: any) => {
+            if (err) {
+                log.error(err);
+            } else {
+                log.info('init db');
+                this.db.run('create table if not exists servers (id integer primary key autoincrement, name text, url text, username text, password text)');
+            }
+        });
     }
 
     public static instance() {
         return this._instance || (this._instance = new SettingsManager());
     }
 
-    loadServerList(): Array<ServerInfo> {
-        return new Array<ServerInfo>();
+    private db: sqlite3.Database;
+
+    loadServerList(win: BrowserWindow, messageName: string): void {
+        log.info('loadServerList');
+        this.db.all('select * from servers', (err: any, rows: any[]) => {
+            const serverList: Array<ServerInfo> = [];
+            for (const row of rows) {
+                log.info(row);
+                serverList.push({ id: row.id, name: row.name, url: row.url, username: row.username, password: row.password });
+            }
+
+            log.info('serverList: ' + serverList);
+            win.webContents.send(messageName, serverList);
+        });
+    }
+
+    /**
+     * 원격 서버 목록에 새 항목을 추가한다.
+     * @param server_name 서버 이름
+     * @param server_url URL
+     * @param username 유저명(ID)
+     * @param password 비밀번호
+     */
+    addServer(server_name: string, server_url: string, username: string, password: string) {
+        this.db.run(
+            'insert into servers (name, url, username, password) values (?, ?, ?, ?)',
+            [server_name, server_url, username, password],
+            (result: RunResult, err: any) => {
+                log.info('result = ' + result + ' err = ' + err);
+            },
+        );
     }
 
     clear(): void {

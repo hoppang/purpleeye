@@ -35,3 +35,7 @@ div#itemlist_content {
     background-color: #eeeef5;
     text-shadow: 0 0.1em 0.1em #d9c0d9;
 }
+
+a.edit_server {
+    color: magenta;
+}
