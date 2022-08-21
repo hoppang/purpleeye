@@ -9,6 +9,13 @@ const SettingsKey = {
     LAST_DIR: 'last_dir',
 };
 
+class ServerInfo {
+    public name!: string;
+    public url!: string;
+    public username!: string;
+    public password!: string;
+}
+
 /**
  * 설정 관리 클래스. 싱글턴
  */
@@ -23,6 +30,10 @@ class SettingsManager {
 
     public static instance() {
         return this._instance || (this._instance = new SettingsManager());
+    }
+
+    loadServerList(): Array<ServerInfo> {
+        return new Array<ServerInfo>();
     }
 
     clear(): void {
@@ -50,4 +61,4 @@ class SettingsManager {
     }
 }
 
-export { SettingsKey, SettingsManager };
+export { SettingsKey, ServerInfo, SettingsManager };

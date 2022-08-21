@@ -15,6 +15,7 @@ import { RemoteBrowser } from './browsers/remote_browser';
  */
 
 require('./ipc/main_from_settings');
+require('./ipc/main_from_remote');
 
 let viewer: IViewer;
 let browser: LocalBrowser;
