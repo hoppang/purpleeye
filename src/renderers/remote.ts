@@ -68,6 +68,16 @@ function serverItemStr(serverName: string, url: string, serverId: number) {
     );
 }
 
+/**
+ * 원격 브라우저의 현재 디렉토리를 변경한다.
+ * @param dir 변경할 디렉토리. 현재 디렉토리의 부모 또는 자식
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function changeDir(dir: string): void {
+    log.info('remote renderer receives changeDir ' + dir);
+    ipcRenderer.send('change_dir', dir);
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function addNewServer(): void {
     log.info('addNewServer');

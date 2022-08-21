@@ -15,12 +15,19 @@ ipcMain.on('connect', (event: IpcMainEvent, serverId: number) => {
                 username: row.username,
                 password: row.password,
             });
-            RemoteBrowser.instance().ls('/');
+            RemoteBrowser.instance().ls(event.sender);
         } else {
             log.error(err);
             alert('Connect error: ' + err.message);
         }
     });
+});
+
+/**
+ * Remote Renderer 에서 보내는 change_dir 메시지를 받아서 처리한다.
+ */
+ipcMain.on('change_dir', (event: IpcMainEvent, directory: string) => {
+    RemoteBrowser.instance().cd(event.sender, directory);
 });
 
 ipcMain.on('load_add_new_server_page', function (event: IpcMainEvent) {
