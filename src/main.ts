@@ -101,6 +101,7 @@ ipcMain.on('back_to_browser', (event: IpcMainEvent) => {
     }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 ipcMain.on('load_remote_page', (event: IpcMainEvent) => {
     RemoteBrowser.instance().loadIndexPage();
 });

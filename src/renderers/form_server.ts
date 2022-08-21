@@ -3,7 +3,8 @@ import log from 'electron-log';
 
 const formAddServer = document.getElementById('form_add_server') as HTMLFormElement;
 
-formAddServer.addEventListener('submit', (event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+formAddServer.addEventListener('submit', (event: SubmitEvent) => {
     const server_name = document.getElementById('server_name') as HTMLInputElement;
     const server_url = document.getElementById('server_url') as HTMLInputElement;
     const username = document.getElementById('username') as HTMLInputElement;

@@ -2,7 +2,6 @@ import { app, BrowserWindow } from 'electron';
 import log from 'electron-log';
 import settings from 'electron-settings';
 import sqlite3, { RunResult } from 'sqlite3';
-import MainForm from '../mainform';
 
 const SettingsKey = {
     FULLSCREEN_VIEWER: 'fullscreen_viewer',
@@ -35,7 +34,9 @@ class SettingsManager {
                 log.error(err);
             } else {
                 log.info('init db');
-                this.db.run('create table if not exists servers (id integer primary key autoincrement, name text, url text, username text, password text)');
+                this.db.run(
+                    'create table if not exists servers (id integer primary key autoincrement, name text, url text, username text, password text)',
+                );
             }
         });
     }
@@ -52,12 +53,26 @@ class SettingsManager {
             const serverList: Array<ServerInfo> = [];
             for (const row of rows) {
                 log.info(row);
-                serverList.push({ id: row.id, name: row.name, url: row.url, username: row.username, password: row.password });
+                serverList.push({
+                    id: row.id,
+                    name: row.name,
+                    url: row.url,
+                    username: row.username,
+                    password: row.password,
+                });
             }
 
             log.info('serverList: ' + serverList);
             win.webContents.send(messageName, serverList);
         });
+    }
+
+    /**
+     * DB에 저장된 서버 정보를 ID 기준으로 읽어서 가져온다.
+     * @param id 서버 ID
+     */
+    getServer(id: number, callback: (err: Error | null, row: any) => void): void {
+        this.db.get('select * from servers where id = ?', [id], callback);
     }
 
     /**

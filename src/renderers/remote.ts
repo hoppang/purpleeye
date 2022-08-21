@@ -64,7 +64,7 @@ function serverItemStr(serverName: string, url: string, serverId: number) {
         serverName,
         url,
         serverId,
-        serverId
+        serverId,
     );
 }
 
@@ -75,6 +75,7 @@ function addNewServer(): void {
 
 function connect(serverId: number): void {
     log.info('connect ' + serverId);
+    ipcRenderer.send('connect', serverId);
 }
 
 function del_server(serverId: number): void {
