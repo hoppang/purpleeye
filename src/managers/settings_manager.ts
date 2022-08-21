@@ -29,7 +29,7 @@ class SettingsManager {
             this.setString(SettingsKey.LAST_DIR, app.getPath('home'));
         }
 
-        this.db = new sqlite3.Database('settings.db', (err: any) => {
+        this.db = new sqlite3.Database('settings.db', (err: Error | null) => {
             if (err) {
                 log.error(err);
             } else {
@@ -49,21 +49,26 @@ class SettingsManager {
 
     loadServerList(win: BrowserWindow, messageName: string): void {
         log.info('loadServerList');
-        this.db.all('select * from servers', (err: any, rows: any[]) => {
-            const serverList: Array<ServerInfo> = [];
-            for (const row of rows) {
-                log.info(row);
-                serverList.push({
-                    id: row.id,
-                    name: row.name,
-                    url: row.url,
-                    username: row.username,
-                    password: row.password,
-                });
-            }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.db.all('select * from servers', (err: Error | null, rows: any[]) => {
+            if (err) {
+                log.error(err);
+            } else {
+                const serverList: Array<ServerInfo> = [];
+                for (const row of rows) {
+                    log.info(row);
+                    serverList.push({
+                        id: row.id,
+                        name: row.name,
+                        url: row.url,
+                        username: row.username,
+                        password: row.password,
+                    });
+                }
 
-            log.info('serverList: ' + serverList);
-            win.webContents.send(messageName, serverList);
+                log.info('serverList: ' + serverList);
+                win.webContents.send(messageName, serverList);
+            }
         });
     }
 
@@ -71,6 +76,7 @@ class SettingsManager {
      * DB에 저장된 서버 정보를 ID 기준으로 읽어서 가져온다.
      * @param id 서버 ID
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getServer(id: number, callback: (err: Error | null, row: any) => void): void {
         this.db.get('select * from servers where id = ?', [id], callback);
     }
@@ -86,8 +92,12 @@ class SettingsManager {
         this.db.run(
             'insert into servers (name, url, username, password) values (?, ?, ?, ?)',
             [server_name, server_url, username, password],
-            (result: RunResult, err: any) => {
-                log.info('result = ' + result + ' err = ' + err);
+            (result: RunResult, err: Error | null) => {
+                if (err) {
+                    log.error(err);
+                } else {
+                    log.info('result = ' + result + ' err = ' + err);
+                }
             },
         );
     }

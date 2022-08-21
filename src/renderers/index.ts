@@ -50,6 +50,7 @@ function view(cwd: string, filename: string) {
     ipcRenderer.send('view', { cwd: cwd, filename: filename });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onClickRemote() {
     log.info('onClickRemote');
     ipcRenderer.send('load_remote_page');

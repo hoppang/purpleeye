@@ -59,7 +59,7 @@ function dirItemStr(dirName: string): string {
 
 function serverItemStr(serverName: string, url: string, serverId: number) {
     return util.format(
-        '<div class="listitem listitem_dir"><a href="#" onclick="connect(%d);">%s (%s)</a> <a href="#" class="edit_server" onclick="edit(%d);">edit</a> <a href="#" class="delete_server" onclick="del_server(%d);">delete</a></div>',
+        '<div class="listitem listitem_dir"><a href="#" onclick="connect(%d);">%s (%s)</a> <a href="#" class="edit_server" onclick="edit(%d);">edit</a> <a href="#" class="delete_server" onclick="deleteServer(%d);">delete</a></div>',
         serverId,
         serverName,
         url,
@@ -68,17 +68,20 @@ function serverItemStr(serverName: string, url: string, serverId: number) {
     );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function addNewServer(): void {
     log.info('addNewServer');
     ipcRenderer.send('load_add_new_server_page');
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function connect(serverId: number): void {
     log.info('connect ' + serverId);
     ipcRenderer.send('connect', serverId);
 }
 
-function del_server(serverId: number): void {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function deleteServer(serverId: number): void {
     log.info('delete ' + serverId);
     ipcRenderer.send('delete_server', serverId);
 }

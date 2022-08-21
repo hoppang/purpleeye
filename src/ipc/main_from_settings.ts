@@ -26,22 +26,28 @@ ipcMain.on('settings_ready', (event: IpcMainEvent) => {
 
     const tempDir = path.join(app.getPath('temp'), 'purpleeye');
 
-    fastFolderSize(tempDir, (err, size: number | undefined) => {
-        const tempDirSize: number = size || 0;
-        event.sender.send('response_settings_ready', {
-            isFullscreenViewer,
-            quitFullscreenWhenBack,
-            rememberLastDir,
-            tempDir,
-            tempDirSize,
-        });
+    fastFolderSize(tempDir, (err: Error | null, size: number | undefined) => {
+        if (err != null) {
+            log.error(err);
+        } else {
+            const tempDirSize: number = size || 0;
+            event.sender.send('response_settings_ready', {
+                isFullscreenViewer,
+                quitFullscreenWhenBack,
+                rememberLastDir,
+                tempDir,
+                tempDirSize,
+            });
+        }
     });
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 ipcMain.on('clear_settings', (event: IpcMainEvent) => {
     SettingsManager.instance().clear();
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 ipcMain.on('clear_cache', (event: IpcMainEvent) => {
     const tempDir = path.join(app.getPath('temp'), 'purpleeye');
     fs.readdir(tempDir, (err, files) => {
