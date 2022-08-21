@@ -62,7 +62,11 @@ class RemoteBrowser {
 
                         for (const item of contents) {
                             log.info('directoryItems = ' + item.filename);
-                            dirs.push(item.filename);
+                            if (item.type === 'directory') {
+                                dirs.push(item.filename);
+                            } else {
+                                files.push(item.filename);
+                            }
                         }
 
                         sender.send('ls', { cwd: this.cwd, elements: { dirs: dirs, files: files } });
