@@ -8,6 +8,7 @@ import CBZViewer from './viewer/cbz_viewer';
 import { SettingsKey, SettingsManager } from './managers/settings_manager';
 import MainForm from './mainform';
 import path from 'path';
+import { RemoteBrowser } from './browsers/remote_browser';
 
 /**
  * 메인 모듈 (index)
@@ -97,6 +98,10 @@ ipcMain.on('back_to_browser', (event: IpcMainEvent) => {
     ) {
         MainForm.win().setFullScreen(false);
     }
+});
+
+ipcMain.on('load_remote_page', (event: IpcMainEvent) => {
+    RemoteBrowser.instance().loadIndexPage();
 });
 
 ipcMain.on('goto', (event: IpcMainEvent, pageNo: number) => {

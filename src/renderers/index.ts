@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import log from 'electron-log';
 import util from 'util';
 
 ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: { dirs: Array<string>; files: Array<string> } }) {
@@ -47,4 +48,9 @@ function changeDir(dirname: string) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function view(cwd: string, filename: string) {
     ipcRenderer.send('view', { cwd: cwd, filename: filename });
+}
+
+function onClickRemote() {
+    log.info("onClickRemote");
+    ipcRenderer.send('load_remote_page');
 }
