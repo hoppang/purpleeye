@@ -10,7 +10,6 @@ import { SettingsManager, ServerInfo } from '../managers/settings_manager';
 class RemoteBrowser {
     private static _instance: RemoteBrowser;
     private constructor() {
-        this.serverInfo = undefined;
         this.client = undefined;
         this.cwd = '/';
     }
@@ -19,7 +18,6 @@ class RemoteBrowser {
         return this._instance || (this._instance = new RemoteBrowser());
     }
 
-    private serverInfo: ServerInfo | undefined;
     private client: WebDAVClient | undefined;
     private cwd: string;
 
@@ -31,7 +29,6 @@ class RemoteBrowser {
     }
 
     connect(server: ServerInfo): void {
-        this.serverInfo = server;
         this.client = createClient(server.url, {
             username: server.username,
             password: server.password,
