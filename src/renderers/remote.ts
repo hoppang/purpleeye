@@ -48,7 +48,12 @@ ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: { dirs: Ar
 });
 
 function dirItemStr(dirName: string): string {
-    return util.format('<div class="listitem listitem_dir" onclick="changeDir(\'%s\');"><a href="#">%s</a></div>', dirName, dirName);
+    return util.format(
+        '<div class="listitem listitem_dir" onclick="changeDir(\'%s\');"><a href="#">%s</a></div>',
+        dirName,
+        dirName,
+    );
+}
 }
 
 function addNewServer(): void {

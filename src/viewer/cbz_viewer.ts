@@ -50,7 +50,7 @@ export default class CBZViewer implements IViewer {
         }
 
         if (this._entries.length == 0) {
-            log.error("no entries in cbz");
+            log.error('no entries in cbz');
             this._win.webContents.send('no_image_in_cbz');
             return;
         }

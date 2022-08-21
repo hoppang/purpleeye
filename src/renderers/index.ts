@@ -51,6 +51,6 @@ function view(cwd: string, filename: string) {
 }
 
 function onClickRemote() {
-    log.info("onClickRemote");
+    log.info('onClickRemote');
     ipcRenderer.send('load_remote_page');
 }
