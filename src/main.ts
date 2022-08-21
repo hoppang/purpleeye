@@ -15,15 +15,13 @@ import path from 'path';
 
 require('./ipc/main_from_settings');
 
-let main: MainForm;
 let viewer: IViewer;
 let browser: LocalBrowser;
 const initOpenFileQueue: string[] = [];
 
 app.whenReady().then(async () => {
     log.info('arguments: ' + process.argv);
-    main = new MainForm();
-    browser = new LocalBrowser(main.win());
+    browser = new LocalBrowser(MainForm.win());
 
     if (initOpenFileQueue.length > 0) {
         const cwd = path.dirname(initOpenFileQueue[0]);
@@ -63,10 +61,10 @@ function initViewer(parameter: { cwd: string; filename: string }) {
 
     switch (fileType) {
         case FILE_TYPE.CBZ:
-            viewer = new CBZViewer(main.win());
+            viewer = new CBZViewer(MainForm.win());
             break;
         case FILE_TYPE.IMAGE:
-            viewer = new ImageViewer(main.win());
+            viewer = new ImageViewer(MainForm.win());
             break;
         default:
             break;
@@ -97,7 +95,7 @@ ipcMain.on('back_to_browser', (event: IpcMainEvent) => {
         SettingsManager.instance().getBoolean(SettingsKey.FULLSCREEN_VIEWER) &&
         SettingsManager.instance().getBoolean(SettingsKey.QUIT_FULLSCREEN_WHEN_BACK)
     ) {
-        main.win().setFullScreen(false);
+        MainForm.win().setFullScreen(false);
     }
 });
 

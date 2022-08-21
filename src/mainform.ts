@@ -2,8 +2,9 @@ import { BrowserWindow } from 'electron';
 
 export default class MainForm {
     private _win: BrowserWindow;
+    private static _instance: MainForm;
 
-    constructor() {
+    private constructor() {
         this._win = new BrowserWindow({
             width: 1024,
             height: 768,
@@ -17,7 +18,11 @@ export default class MainForm {
         });
     }
 
-    win(): BrowserWindow {
-        return this._win;
+    public static instance() {
+        return this._instance || (this._instance = new MainForm());
+    }
+
+    public static win(): BrowserWindow {
+        return this.instance()._win;
     }
 }
