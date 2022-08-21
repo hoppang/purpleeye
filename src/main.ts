@@ -2,7 +2,7 @@ import { app, ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
 import LocalBrowser from './browsers/local_browser';
 import { FILE_TYPE, Util } from './util';
-import IViewer from './interfaces/iviewer';
+import { Viewer } from './interfaces/viewer';
 import ImageViewer from './viewer/image_viewer';
 import CBZViewer from './viewer/cbz_viewer';
 import { SettingsKey, SettingsManager } from './managers/settings_manager';
@@ -17,7 +17,7 @@ import { RemoteBrowser } from './browsers/remote_browser';
 require('./ipc/main_from_settings');
 require('./ipc/main_from_remote');
 
-let viewer: IViewer;
+let viewer: Viewer;
 let browser: LocalBrowser;
 const initOpenFileQueue: string[] = [];
 

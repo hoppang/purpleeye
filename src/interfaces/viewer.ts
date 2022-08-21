@@ -1,6 +1,6 @@
 import { WebContents } from 'electron';
 
-interface IViewer {
+export interface Viewer {
     init(cwd: string, filename: string, fullscreen: boolean): void;
     goto(sender: WebContents, pageNo: number): void;
     next(): void;
@@ -8,5 +8,3 @@ interface IViewer {
     toggleFullscreen(): void;
     quit(): void;
 }
-
-export default IViewer;

@@ -1,9 +1,9 @@
 import { BrowserWindow, WebContents } from 'electron';
 import fs from 'fs';
-import IViewer from '../interfaces/iviewer';
+import { Viewer } from '../interfaces/viewer';
 import Util from '../util';
 
-class ImageViewer implements IViewer {
+class ImageViewer implements Viewer {
     private readonly _win: BrowserWindow;
     private _files: Array<string>;
     private _cursor: number;

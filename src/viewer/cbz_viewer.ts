@@ -1,5 +1,5 @@
 import { app, BrowserWindow, WebContents } from 'electron';
-import IViewer from '../interfaces/iviewer';
+import { Viewer } from '../interfaces/viewer';
 import StreamZip from 'node-stream-zip';
 import path from 'path';
 import crypto from 'crypto';
@@ -7,7 +7,7 @@ import fs from 'fs';
 import Util from '../util';
 import log from 'electron-log';
 
-export default class CBZViewer implements IViewer {
+export default class CBZViewer implements Viewer {
     private _zipPath?: string;
     private _zip?: StreamZip;
     private _win: BrowserWindow;
