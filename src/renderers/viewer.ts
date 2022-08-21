@@ -26,6 +26,12 @@ ipcRenderer.on('load_image', (_event, { cwd: cwd, filename: filename, index: ind
     pageSlider.value = util.format('%d', index);
 });
 
+ipcRenderer.on('no_image_in_cbz', () => {
+    log.error('no image in cbz (viewer renderer)');
+    const container = document.getElementById('img-container') as HTMLDivElement;
+    container.innerHTML = 'no image in cbz';
+});
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onChangeSlider() {
     const slider = document.getElementById('pageSlider') as HTMLInputElement;

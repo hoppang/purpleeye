@@ -43,10 +43,16 @@ export default class CBZViewer implements IViewer {
         }
     }
 
-    private extract() {
+    private extract(): void {
         const tmpDir = path.join(app.getPath('temp'), 'purpleeye');
         if (!fs.existsSync(tmpDir)) {
             fs.mkdirSync(tmpDir);
+        }
+
+        if (this._entries.length == 0) {
+            log.error("no entries in cbz");
+            this._win.webContents.send('no_image_in_cbz');
+            return;
         }
 
         const index = this._cursor;
