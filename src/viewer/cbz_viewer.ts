@@ -1,11 +1,11 @@
-import { app, BrowserWindow, WebContents } from 'electron';
 import { Viewer } from '../interfaces/viewer';
+import { BrowserWindow, WebContents } from 'electron';
 import StreamZip from 'node-stream-zip';
 import path from 'path';
 import crypto from 'crypto';
-import fs from 'fs';
 import Util from '../util';
 import log from 'electron-log';
+import { TempUtil } from '../fileaccessors/temp_util';
 
 export default class CBZViewer implements Viewer {
     private _zipPath?: string;
@@ -44,10 +44,7 @@ export default class CBZViewer implements Viewer {
     }
 
     private extract(): void {
-        const tmpDir = path.join(app.getPath('temp'), 'purpleeye');
-        if (!fs.existsSync(tmpDir)) {
-            fs.mkdirSync(tmpDir);
-        }
+        TempUtil.makeTempDir();
 
         if (this._entries.length == 0) {
             log.error('no entries in cbz');
@@ -62,9 +59,9 @@ export default class CBZViewer implements Viewer {
             .createHash('sha256')
             .update(this._zipPath + entryName)
             .digest('hex');
-        const entryOut = path.join(tmpDir, outputFile);
+        const entryOut = path.join(TempUtil.getTempDir(), outputFile);
 
-        if (fs.existsSync(entryOut)) {
+        if (TempUtil.existsFile(entryOut)) {
             log.info('cached file exists');
             this._win.webContents.send('load_image', {
                 cwd: '',
