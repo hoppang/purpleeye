@@ -1,18 +1,21 @@
 import { BrowserWindow, WebContents } from 'electron';
-import fs from 'fs';
 import { Viewer } from '../interfaces/viewer';
 import Util from '../util';
+import { FileAccessor } from '../interfaces/file_accessor';
+import { LocalFileAccessor } from '../fileaccessors/local_file_accessor';
 
 class ImageViewer implements Viewer {
     private readonly _win: BrowserWindow;
-    private _files: Array<string>;
+    private files: Array<string>;
     private _cursor: number;
     private _cwd?: string;
+    private fileAccessor: FileAccessor;
 
     constructor(win: BrowserWindow) {
         this._win = win;
-        this._files = [];
+        this.files = [];
         this._cursor = 0;
+        this.fileAccessor = new LocalFileAccessor();
     }
 
     init(cwd: string, filename: string, fullscreen: boolean): void {
@@ -25,7 +28,7 @@ class ImageViewer implements Viewer {
                 cwd: cwd,
                 filename: filename,
                 index: this._cursor,
-                maxPage: this._files.length,
+                maxPage: this.files.length,
             });
         });
     }
@@ -34,9 +37,9 @@ class ImageViewer implements Viewer {
         this._cursor = pageNo;
         sender.send('load_image', {
             cwd: this._cwd,
-            filename: this._files[this._cursor],
+            filename: this.files[this._cursor],
             index: this._cursor,
-            maxPage: this._files.length,
+            maxPage: this.files.length,
         });
     }
 
@@ -44,9 +47,9 @@ class ImageViewer implements Viewer {
         this._cursor = this.nextIndexOf(this._cursor);
         this._win.webContents.send('load_image', {
             cwd: this._cwd,
-            filename: this._files[this._cursor],
+            filename: this.files[this._cursor],
             index: this._cursor,
-            maxPage: this._files.length,
+            maxPage: this.files.length,
         });
     }
 
@@ -54,9 +57,9 @@ class ImageViewer implements Viewer {
         this._cursor = this.prevIndexOf(this._cursor);
         this._win.webContents.send('load_image', {
             cwd: this._cwd,
-            filename: this._files[this._cursor],
+            filename: this.files[this._cursor],
             index: this._cursor,
-            maxPage: this._files.length,
+            maxPage: this.files.length,
         });
     }
 
@@ -69,30 +72,30 @@ class ImageViewer implements Viewer {
     }
 
     private buildFilesList(cwd: string, filename: string): void {
-        const entries = fs.readdirSync(cwd);
-        this._files = [];
+        const entries = this.fileAccessor.readdirSync(cwd);
+        this.files = [];
 
         for (let i = 0; i < entries.length; i++) {
-            const name = entries[i];
+            const entry = entries[i];
 
             try {
-                if (Util.isImage(name) && !Util.isHidden(name)) {
-                    this._files.push(name);
+                if (entry.isDirectory == false && Util.isImage(entry.name) && !Util.isHidden(entry.name)) {
+                    this.files.push(entry.name);
                 }
             } catch (e) {
                 // do nothing
             }
         }
 
-        this._cursor = this._files.indexOf(filename);
+        this._cursor = this.files.indexOf(filename);
     }
 
     private nextIndexOf(cursor: number): number {
-        return (cursor + 1) % this._files.length;
+        return (cursor + 1) % this.files.length;
     }
 
     private prevIndexOf(cursor: number): number {
-        return (cursor + this._files.length - 1) % this._files.length;
+        return (cursor + this.files.length - 1) % this.files.length;
     }
 }
 

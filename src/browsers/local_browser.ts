@@ -1,5 +1,6 @@
 import { BrowserWindow } from 'electron';
-import fs from 'fs';
+import { LocalFileAccessor } from '../fileaccessors/local_file_accessor';
+import { FileAccessor } from '../interfaces/file_accessor';
 import { SettingsKey, SettingsManager } from '../managers/settings_manager';
 import { Util } from '../util';
 
@@ -14,12 +15,14 @@ class LocalBrowser {
     private dirs: Array<string>;
     private files: Array<string>;
     private readonly _win: BrowserWindow;
+    private fileAccessor: FileAccessor;
 
     constructor(win: BrowserWindow) {
         this.dirs = new Array<string>();
         this.files = new Array<string>();
         this._cwd = process.cwd();
         this._win = win;
+        this.fileAccessor = new LocalFileAccessor();
     }
 
     loadIndexPage(isLaunch: boolean): void {
@@ -66,19 +69,16 @@ class LocalBrowser {
      * @returns
      */
     private ls(path: string): void {
-        const entries = fs.readdirSync(path);
         this.dirs = [];
         this.files = [];
 
-        for (let i = 0; i < entries.length; i++) {
-            const name = entries[i];
-
+        const entries = this.fileAccessor.readdirSync(path);
+        for (const entry of entries) {
             try {
-                const is_dir = fs.statSync(path + '/' + name).isDirectory();
-                if (is_dir && !Util.isHidden(name)) {
-                    this.dirs.push(name);
-                } else if ((Util.isImage(name) || Util.isCBZ(name)) && !Util.isHidden(name)) {
-                    this.files.push(name);
+                if (entry.isDirectory && !Util.isHidden(entry.name)) {
+                    this.dirs.push(entry.name);
+                } else if ((Util.isImage(entry.name) || Util.isCBZ(entry.name)) && !Util.isHidden(entry.name)) {
+                    this.files.push(entry.name);
                 }
             } catch (e) {
                 // do nothing
