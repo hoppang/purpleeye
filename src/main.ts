@@ -9,6 +9,7 @@ import { SettingsKey, SettingsManager } from './managers/settings_manager';
 import MainForm from './mainform';
 import path from 'path';
 import { RemoteBrowser } from './browsers/remote_browser';
+import util from 'util';
 
 /**
  * 메인 모듈 (index)
@@ -28,7 +29,7 @@ app.whenReady().then(async () => {
     if (initOpenFileQueue.length > 0) {
         const cwd = path.dirname(initOpenFileQueue[0]);
         const filename = path.basename(initOpenFileQueue[0]);
-        initViewer({ cwd: cwd, filename: filename });
+        initViewer({ cwd: cwd, filename: filename, type: 'local' });
     } else {
         log.info('load index page');
         browser.loadIndexPage(true);
@@ -42,7 +43,7 @@ app.on('will-finish-launching', () => {
         } else {
             const cwd = path.dirname(file);
             const filename = path.basename(file);
-            initViewer({ cwd: cwd, filename: filename });
+            initViewer({ cwd: cwd, filename: filename, type: 'local' });
         }
         event.preventDefault();
     });
@@ -58,7 +59,7 @@ app.on('will-quit', () => {
  * 뷰어 초기화 후 로딩
  * @param parameter cwd: 디렉토리, filename: 파일명
  */
-function initViewer(parameter: { cwd: string; filename: string }) {
+function initViewer(parameter: { cwd: string; filename: string; type: string }) {
     const fileType = Util.getFileType(parameter.filename);
 
     switch (fileType) {
@@ -66,7 +67,7 @@ function initViewer(parameter: { cwd: string; filename: string }) {
             viewer = new CBZViewer(MainForm.win());
             break;
         case FILE_TYPE.IMAGE:
-            viewer = new ImageViewer(MainForm.win());
+            viewer = new ImageViewer(MainForm.win(), parameter.type);
             break;
         default:
             break;
@@ -85,7 +86,8 @@ ipcMain.on('cd', (_event, dirname: string) => {
     browser.chdir(dirname, true);
 });
 
-ipcMain.on('view', (_event, parameter: { cwd: string; filename: string }) => {
+ipcMain.on('view', (_event, parameter: { type: string; cwd: string; filename: string }) => {
+    log.info(util.format('view[%s]: %s', parameter.type, parameter.cwd));
     initViewer(parameter);
 });
 

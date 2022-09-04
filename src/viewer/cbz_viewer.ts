@@ -64,8 +64,7 @@ export default class CBZViewer implements Viewer {
         if (TempUtil.existsFile(entryOut)) {
             log.info('cached file exists');
             this._win.webContents.send('load_image', {
-                cwd: '',
-                filename: entryOut,
+                url: entryOut,
                 index: this._cursor,
                 maxPage: this._entries.length,
             });
@@ -75,8 +74,7 @@ export default class CBZViewer implements Viewer {
             this._zip?.extract(entryName, entryOut, (err: any) => {
                 if (err == undefined) {
                     this._win.webContents.send('load_image', {
-                        cwd: '',
-                        filename: entryOut,
+                        url: entryOut,
                         index: this._cursor,
                         maxPage: this._entries.length,
                     });

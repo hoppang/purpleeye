@@ -95,3 +95,9 @@ function deleteServer(serverId: number): void {
     log.info('delete ' + serverId);
     ipcRenderer.send('delete_server', serverId);
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function view(cwd: string, filename: string): void {
+    log.info('remote browser view ' + filename);
+    ipcRenderer.send('view', { cwd: cwd, filename: filename, type: 'webdav' });
+}

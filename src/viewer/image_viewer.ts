@@ -3,6 +3,7 @@ import { Viewer } from '../interfaces/viewer';
 import Util from '../util';
 import { FileAccessor } from '../interfaces/file_accessor';
 import { LocalFileAccessor } from '../fileaccessors/local_file_accessor';
+import { WebdavFileAccessor } from '../fileaccessors/webdav_file_accessor';
 
 class ImageViewer implements Viewer {
     private readonly _win: BrowserWindow;
@@ -11,11 +12,20 @@ class ImageViewer implements Viewer {
     private _cwd?: string;
     private fileAccessor: FileAccessor;
 
-    constructor(win: BrowserWindow) {
+    constructor(win: BrowserWindow, type: string) {
         this._win = win;
         this.files = [];
         this._cursor = 0;
-        this.fileAccessor = new LocalFileAccessor();
+        if (type == 'local') {
+            this.fileAccessor = new LocalFileAccessor();
+        } else {
+            this.fileAccessor = new WebdavFileAccessor();
+            this.fileAccessor.connect(
+                'https://hsbb.asuscomm.com:40443/remote.php/dav/files/hoppang/',
+                'hoppang',
+                'ghQkdslan9(',
+            );
+        }
     }
 
     init(cwd: string, filename: string, fullscreen: boolean): void {
@@ -23,10 +33,10 @@ class ImageViewer implements Viewer {
         this.buildFilesList(cwd, filename);
         this._win.loadFile('view/viewer.html');
         this._win.setFullScreen(fullscreen);
-        this._win.webContents.once('did-finish-load', () => {
+        this._win.webContents.once('did-finish-load', async () => {
+            const url: string = await this.fileAccessor.getFileAsync(cwd, filename);
             this._win.webContents.send('load_image', {
-                cwd: cwd,
-                filename: filename,
+                url: url,
                 index: this._cursor,
                 maxPage: this.files.length,
             });

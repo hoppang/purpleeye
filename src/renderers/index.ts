@@ -47,7 +47,7 @@ function changeDir(dirname: string) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function view(cwd: string, filename: string) {
-    ipcRenderer.send('view', { cwd: cwd, filename: filename });
+    ipcRenderer.send('view', { cwd: cwd, filename: filename, type: 'local' });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
