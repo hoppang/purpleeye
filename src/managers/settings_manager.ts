@@ -102,6 +102,10 @@ class SettingsManager {
         );
     }
 
+    deleteServer(serverId: number) {
+        this.db.run('delete from servers where id = ?', [serverId]);
+    }
+
     clear(): void {
         log.info('clear settings');
         this.setBoolean(SettingsKey.FULLSCREEN_VIEWER, false);

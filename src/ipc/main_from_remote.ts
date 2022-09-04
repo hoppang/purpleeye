@@ -1,6 +1,7 @@
 import { ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
 import { RemoteBrowser } from '../browsers/remote_browser';
+import MainForm from '../mainform';
 import { ServerInfo, SettingsManager } from '../managers/settings_manager';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -48,3 +49,8 @@ ipcMain.on(
         SettingsManager.instance().addServer(args.server_name, args.server_url, args.username, args.password);
     },
 );
+
+ipcMain.on('delete_server', (event: IpcMainEvent, serverId: number) => {
+    SettingsManager.instance().deleteServer(serverId);
+    SettingsManager.instance().loadServerList(MainForm.win(), 'ls-server');
+});
