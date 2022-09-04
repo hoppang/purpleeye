@@ -1,9 +1,10 @@
-import { app, ipcMain, IpcMainEvent } from 'electron';
+import { ipcMain, IpcMainEvent } from 'electron';
 import log from 'electron-log';
 import path from 'path';
 import fs from 'fs';
 import fastFolderSize from 'fast-folder-size';
 import { SettingsKey, SettingsManager } from '../managers/settings_manager';
+import { TempUtil } from '../fileaccessors/temp_util';
 
 ipcMain.on(
     'save_settings',
@@ -24,28 +25,32 @@ ipcMain.on('settings_ready', (event: IpcMainEvent) => {
     const quitFullscreenWhenBack = SettingsManager.instance().getBoolean(SettingsKey.QUIT_FULLSCREEN_WHEN_BACK);
     const rememberLastDir = SettingsManager.instance().getBoolean(SettingsKey.REMEMBER_LAST_DIR);
 
-    const tempDir = path.join(app.getPath('temp'), 'purpleeye');
+    const tempDir = TempUtil.getTempDir();
 
-    fastFolderSize(tempDir, (err, size: number | undefined) => {
-        const tempDirSize: number = size || 0;
-        event.sender.send('response_settings_ready', {
-            isFullscreenViewer,
-            quitFullscreenWhenBack,
-            rememberLastDir,
-            tempDir,
-            tempDirSize,
-        });
+    fastFolderSize(tempDir, (err: Error | null, size: number | undefined) => {
+        if (err != null) {
+            log.error(err);
+        } else {
+            const tempDirSize: number = size || 0;
+            event.sender.send('response_settings_ready', {
+                isFullscreenViewer,
+                quitFullscreenWhenBack,
+                rememberLastDir,
+                tempDir,
+                tempDirSize,
+            });
+        }
     });
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 ipcMain.on('clear_settings', (event: IpcMainEvent) => {
     SettingsManager.instance().clear();
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 ipcMain.on('clear_cache', (event: IpcMainEvent) => {
-    log.info('todo: implement clear_cache');
-
-    const tempDir = path.join(app.getPath('temp'), 'purpleeye');
+    const tempDir = TempUtil.getTempDir();
     fs.readdir(tempDir, (err, files) => {
         if (err) throw err;
 

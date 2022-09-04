@@ -1,7 +1,6 @@
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import util from 'util';
-import path from 'path';
 
 document.addEventListener('mousewheel', (event: Event) => {
     const deltaY = (<WheelEvent>event).deltaY;
@@ -13,10 +12,10 @@ document.addEventListener('mousewheel', (event: Event) => {
     }
 });
 
-ipcRenderer.on('load_image', (_event, { cwd: cwd, filename: filename, index: index, maxPage: maxPage }) => {
-    log.info(util.format('load_image(viewer): %s / %s', cwd, filename));
+ipcRenderer.on('load_image', (_event, { url: url, index: index, maxPage: maxPage }) => {
+    log.info(util.format('load_image(viewer): %s', url));
     const canvas = document.getElementById('canvas') as HTMLImageElement;
-    canvas.src = path.join(cwd, filename);
+    canvas.src = url;
 
     const indicator = document.getElementById('pageIndicator') as HTMLDivElement;
     indicator.innerHTML = util.format('%d / %d', index + 1, maxPage);
@@ -24,6 +23,12 @@ ipcRenderer.on('load_image', (_event, { cwd: cwd, filename: filename, index: ind
     const pageSlider = document.getElementById('pageSlider') as HTMLInputElement;
     pageSlider.max = util.format('%d', maxPage - 1);
     pageSlider.value = util.format('%d', index);
+});
+
+ipcRenderer.on('no_image_in_cbz', () => {
+    log.error('no image in cbz (viewer renderer)');
+    const container = document.getElementById('img-container') as HTMLDivElement;
+    container.innerHTML = 'no image in cbz';
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,12 +1,13 @@
-import { app, BrowserWindow, WebContents } from 'electron';
-import IViewer from './iviewer';
+import { Viewer } from '../interfaces/viewer';
+import { BrowserWindow, WebContents } from 'electron';
 import StreamZip from 'node-stream-zip';
 import path from 'path';
 import crypto from 'crypto';
-import fs from 'fs';
 import Util from '../util';
+import log from 'electron-log';
+import { TempUtil } from '../fileaccessors/temp_util';
 
-export default class CBZViewer implements IViewer {
+export default class CBZViewer implements Viewer {
     private _zipPath?: string;
     private _zip?: StreamZip;
     private _win: BrowserWindow;
@@ -42,10 +43,13 @@ export default class CBZViewer implements IViewer {
         }
     }
 
-    private extract() {
-        const tmpDir = path.join(app.getPath('temp'), 'purpleeye');
-        if (!fs.existsSync(tmpDir)) {
-            fs.mkdirSync(tmpDir);
+    private extract(): void {
+        TempUtil.makeTempDir();
+
+        if (this._entries.length == 0) {
+            log.error('no entries in cbz');
+            this._win.webContents.send('no_image_in_cbz');
+            return;
         }
 
         const index = this._cursor;
@@ -55,22 +59,22 @@ export default class CBZViewer implements IViewer {
             .createHash('sha256')
             .update(this._zipPath + entryName)
             .digest('hex');
-        const entryOut = path.join(tmpDir, outputFile);
+        const entryOut = path.join(TempUtil.getTempDir(), outputFile);
 
-        if (fs.existsSync(entryOut)) {
+        if (TempUtil.existsFile(entryOut)) {
+            log.info('cached file exists');
             this._win.webContents.send('load_image', {
-                cwd: '',
-                filename: entryOut,
+                url: entryOut,
                 index: this._cursor,
                 maxPage: this._entries.length,
             });
         } else {
+            log.info('cached file not exists. extracting...');
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             this._zip?.extract(entryName, entryOut, (err: any) => {
                 if (err == undefined) {
                     this._win.webContents.send('load_image', {
-                        cwd: '',
-                        filename: entryOut,
+                        url: entryOut,
                         index: this._cursor,
                         maxPage: this._entries.length,
                     });

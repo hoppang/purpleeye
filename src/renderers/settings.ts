@@ -54,3 +54,8 @@ function clearSettings() {
 function clearCache() {
     ipcRenderer.send('clear_cache');
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function onClickRemote() {
+    ipcRenderer.send('load_remote_page');
+}

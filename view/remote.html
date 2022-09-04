@@ -8,8 +8,8 @@
 
 <body>
     <div class="menubar">
-        <span class="menuitem">Local</span>
-        <a class="menuitem" href="#" onclick="onClickRemote();">Remote</a>
+        <a class="menuitem" href="#" onclick="backToBrowser();">Local</a>
+        <span class="menuitem" href="#">Remote</span>
         <a class="menuitem" href="settings.html">Settings</a>
     </div>
     <div id="outer_container">
@@ -25,7 +25,7 @@
         // hack for 'exports is not defined'
         var exports = {};
     </script>
-    <script src="../dist/renderers/index.js"></script>
+    <script src="../dist/renderers/remote.js"></script>
 </body>
 
 </html>

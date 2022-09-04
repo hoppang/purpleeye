@@ -114,3 +114,4 @@ dist
 # macos files
 .DS_Store
 build
+settings.db

@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <title>PurpleEye</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/forms.css">
+</head>
+
+<body>
+    <div class="menubar">
+        <a class="menuitem" href="#" onclick="backToBrowser();">Local</a>
+        <a class="menuitem" href="#" onclick="onClickRemote();">Remote</a>
+        <a class="menuitem" href="settings.html">Settings</a>
+    </div>
+
+    <div id="outer_container">
+        <div id="inner_container">
+            <form id="form_add_server" action="#">
+                <ul class="form_list">
+                    <li>
+                        <div class="input_name">Name</div><input class="input_field" type="text" id="server_name"></input>
+                    </li>
+                    <li>
+                        <div class="input_name">URL</div><input class="input_field" type="text" id="server_url"></input>
+                    </li>
+                    <li>
+                        <div class="input_name">Username</div><input class="input_field" type="text" id="username"></input>
+                    </li>
+                    <li>
+                        <div class="input_name">Password</div><input class="input_field" type="password" id="password"></input>
+                    </li>
+                    <li><input type="submit" class="submit_btn" name="confirm" value="Submit"></li>
+                </ul>
+            </form>
+        </div>
+    </div>
+    <script>
+        // hack for 'exports is not defined'
+        var exports = {};
+    </script>
+    <script src="../dist/renderers/form_server.js"></script>
+</body>
+
+</html>

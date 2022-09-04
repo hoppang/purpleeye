@@ -5,3 +5,44 @@ html, body {
     padding: 0;
     background-color: #808080;
 }
+
+#outer_container {
+    width: 100%;
+    padding-top: 4em;
+    padding-bottom: 2em;
+}
+
+#inner_container {
+    width: 80%;
+    margin: auto;
+    border: 1px solid #f0e0f0;
+    border-radius: 0.4em;
+    padding: 0.4em;
+    box-shadow: 0 0.1em 0.1em #a15c9f30;
+    background-color: #f0f0f0;
+}
+
+.menubar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2em;
+    margin: 0;
+    padding-top: 1em;
+    padding-left: 10%;
+    background-color: #a15c9ff0;
+}
+
+.menuitem {
+    text-decoration: none;
+    color: #efd1ee;
+    margin-left: 1em;
+    margin-right: 1em;
+    user-select: none;
+}
+
+.menuitem:hover {
+    color:#ffffff;
+    transition: 200ms;
+}

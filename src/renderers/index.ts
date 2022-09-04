@@ -46,5 +46,15 @@ function changeDir(dirname: string) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function view(cwd: string, filename: string) {
-    ipcRenderer.send('view', { cwd: cwd, filename: filename });
+    ipcRenderer.send('view', { cwd: cwd, filename: filename, type: 'local' });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function backToBrowser() {
+    ipcRenderer.send('back_to_browser');
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function onClickRemote() {
+    ipcRenderer.send('load_remote_page');
 }

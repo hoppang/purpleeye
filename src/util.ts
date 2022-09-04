@@ -31,6 +31,7 @@ class Util {
             case 'jpg':
             case 'jpeg':
             case 'png':
+            case 'webp':
                 return FILE_TYPE.IMAGE;
             default:
                 return FILE_TYPE.UNKNOWN;
