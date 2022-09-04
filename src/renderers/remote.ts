@@ -101,3 +101,8 @@ function view(cwd: string, filename: string): void {
     log.info('remote browser view ' + filename);
     ipcRenderer.send('view', { cwd: cwd, filename: filename, type: 'webdav' });
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function backToBrowser() {
+    ipcRenderer.send('back_to_browser');
+}

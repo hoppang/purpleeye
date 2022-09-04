@@ -39,6 +39,7 @@ html, body {
     color: #efd1ee;
     margin-left: 1em;
     margin-right: 1em;
+    user-select: none;
 }
 
 .menuitem:hover {
