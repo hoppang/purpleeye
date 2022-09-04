@@ -1,5 +1,4 @@
 import { ipcRenderer } from 'electron';
-import log from 'electron-log';
 import util from 'util';
 
 ipcRenderer.on('ls', function (_event, data: { cwd: string; elements: { dirs: Array<string>; files: Array<string> } }) {
@@ -51,7 +50,11 @@ function view(cwd: string, filename: string) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+function backToBrowser() {
+    ipcRenderer.send('back_to_browser');
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onClickRemote() {
-    log.info('onClickRemote');
     ipcRenderer.send('load_remote_page');
 }
