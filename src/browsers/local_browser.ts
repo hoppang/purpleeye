@@ -72,7 +72,7 @@ class LocalBrowser {
         this.dirs = [];
         this.files = [];
 
-        const entries = this.fileAccessor.readdirSync(path);
+        const entries = this.fileAccessor.readdirSync(path, false);
         for (const entry of entries) {
             try {
                 if (entry.isDirectory && !Util.isHidden(entry.name)) {
