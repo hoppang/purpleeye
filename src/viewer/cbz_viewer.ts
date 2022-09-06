@@ -61,7 +61,7 @@ export default class CBZViewer implements Viewer {
             .digest('hex');
         const entryOut = path.join(TempUtil.getTempDir(), outputFile);
 
-        if (TempUtil.existsFile(entryOut)) {
+        if (TempUtil.existsFile(outputFile)) {
             log.info('cached file exists');
             this._win.webContents.send('load_image', {
                 url: entryOut,
