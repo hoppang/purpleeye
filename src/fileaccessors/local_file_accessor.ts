@@ -14,8 +14,12 @@ export class LocalFileAccessor implements FileAccessor {
         const fileNames = fs.readdirSync(dir);
         const entries: Array<FileEntry> = new Array<FileEntry>();
         for (const fileName of fileNames) {
-            const stat = fs.statSync(path.join(dir, fileName));
-            entries.push(newFileEntry(fileName, stat.isDirectory()));
+            try {
+                const stat = fs.statSync(path.join(dir, fileName));
+                entries.push(newFileEntry(fileName, stat.isDirectory()));
+            } catch (e) {
+                // do nothing
+            }
         }
 
         return entries;
