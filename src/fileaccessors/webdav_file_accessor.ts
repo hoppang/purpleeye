@@ -51,4 +51,26 @@ export class WebdavFileAccessor implements FileAccessor {
             });
         });
     }
+
+    getCursor(): number {
+        throw new Error('Method not implemented.');
+    }
+    getCurrentFileUrl(): string {
+        throw new Error('Method not implemented.');
+    }
+    getFilesCount(): number {
+        throw new Error('Method not implemented.');
+    }
+    goto(pageNo: number): void {
+        throw new Error('Method not implemented.');
+    }
+    prev(): void {
+        throw new Error('Method not implemented.');
+    }
+    next(): void {
+        throw new Error('Method not implemented.');
+    }
+    setCursorByFilename(filename: string): void {
+        throw new Error('Method not implemented.');
+    }
 }
