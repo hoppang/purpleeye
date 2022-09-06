@@ -10,6 +10,7 @@ export default class MainForm {
             height: 768,
             minWidth: 800,
             minHeight: 600,
+            icon: '../res/purpleeye_icon.png',
             // hack for 'require is not defined'
             webPreferences: {
                 nodeIntegration: true,

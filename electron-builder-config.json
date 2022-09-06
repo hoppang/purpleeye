@@ -35,6 +35,7 @@
     },
     "directories": {
         "output": "build",
-        "app": "."
+        "app": ".",
+        "buildResources": "res"
     }
 }
