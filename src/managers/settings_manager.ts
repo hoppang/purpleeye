@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import log from 'electron-log';
 import settings from 'electron-settings';
 import sqlite3, { RunResult } from 'sqlite3';
+import path from 'path';
 
 const SettingsKey = {
     FULLSCREEN_VIEWER: 'fullscreen_viewer',
@@ -29,7 +30,8 @@ class SettingsManager {
             this.setString(SettingsKey.LAST_DIR, app.getPath('home'));
         }
 
-        this.db = new sqlite3.Database('settings.db', (err: Error | null) => {
+        const dbPath = path.join(app.getAppPath(), 'settings.db');
+        this.db = new sqlite3.Database(dbPath, (err: Error | null) => {
             if (err) {
                 log.error(err);
             } else {
