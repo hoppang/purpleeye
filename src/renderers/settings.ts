@@ -6,6 +6,7 @@ const formSettings = document.querySelector('#form_settings');
 const fullscreenViewer = document.getElementById('fullscreen_viewer') as HTMLInputElement;
 const quitFullscreenWhenBack = document.getElementById('quit_fullscreen_when_back') as HTMLInputElement;
 const rememberLastDir = document.getElementById('remember_last_dir') as HTMLInputElement;
+const cacheExpires = document.getElementById('cache_expires') as HTMLInputElement;
 
 document.addEventListener('DOMContentLoaded', pageLoaded);
 
@@ -26,6 +27,7 @@ formSettings?.addEventListener('submit', (event) => {
         fullscreenViewer: fullscreenViewer.checked,
         quitFullscreenWhenBack: quitFullscreenWhenBack.checked,
         rememberLastDir: rememberLastDir.checked,
+        cacheExpires: cacheExpires.value,
     });
 });
 
@@ -35,6 +37,7 @@ ipcRenderer.on('response_settings_ready', (event, params) => {
     quitFullscreenWhenBack.checked = params.quitFullscreenWhenBack;
     quitFullscreenWhenBack.disabled = !fullscreenViewer.checked;
     rememberLastDir.checked = params.rememberLastDir;
+    cacheExpires.value = params.cacheExpires;
 
     const cacheInfo = document.getElementById('cache_info') as HTMLDivElement;
     cacheInfo.innerHTML = util.format('cache size: [%s]', humanFileSize(params.tempDirSize));
@@ -69,7 +72,7 @@ function onClickRemote() {
  *           binary (IEC), aka powers of 1024.
  * @param dp Number of decimal places to display.
  *
- * @return Formatted string.
+ * @return Formatted string.Fc
  */
 function humanFileSize(bytes: number, si = false, dp = 1) {
     const thresh = si ? 1000 : 1024;
