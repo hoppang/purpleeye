@@ -2,6 +2,8 @@ import { app } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import log from 'electron-log';
+import { SettingsManager } from '../managers/settings_manager';
 
 export class TempUtil {
     /**
@@ -33,5 +35,20 @@ export class TempUtil {
         const outFilename = crypto.createHash('sha256').update(path.join(dir, filename)).digest('hex');
 
         return path.join(this.getTempDir(), outFilename);
+    }
+
+    static deleteOldCaches(days: number) {
+        const expiration = SettingsManager.instance().getCacheExpires();
+        const e = new Date();
+        const dir = this.getTempDir();
+        const entries = fs.readdirSync(dir);
+        e.setDate(e.getDate() - expiration);
+
+        for (const file of entries) {
+            const stat = fs.statSync(path.join(this.getTempDir(), file));
+            if (e > stat.mtime) {
+                fs.unlinkSync(path.join(dir, file));
+            }
+        }
     }
 }

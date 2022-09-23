@@ -9,6 +9,7 @@ const SettingsKey = {
     QUIT_FULLSCREEN_WHEN_BACK: 'quit_fullscreen_when_back',
     REMEMBER_LAST_DIR: 'remember_last_dir',
     LAST_DIR: 'last_dir',
+    CACHE_EXPIRES: 'cache_expires',
 };
 
 class ServerInfo {
@@ -116,6 +117,10 @@ class SettingsManager {
         this.setString(SettingsKey.LAST_DIR, app.getPath('home'));
     }
 
+    getCacheExpires(): number {
+        return this.getInt(SettingsKey.CACHE_EXPIRES, 30);
+    }
+
     getBoolean(key: string): boolean {
         return settings.getSync(key)?.valueOf() as boolean;
     }
@@ -124,11 +129,23 @@ class SettingsManager {
         return settings.getSync(key)?.valueOf() as string;
     }
 
+    getInt(key: string, defaultValue: number): number {
+        if (settings.hasSync(key)) {
+            return settings.getSync(key)?.valueOf() as number;
+        }
+
+        return defaultValue;
+    }
+
     setBoolean(key: string, value: boolean): void {
         settings.setSync(key, value);
     }
 
     setString(key: string, value: string): void {
+        settings.setSync(key, value);
+    }
+
+    setInt(key: string, value: number): void {
         settings.setSync(key, value);
     }
 }

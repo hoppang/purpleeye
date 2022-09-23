@@ -1,4 +1,6 @@
 import { BrowserWindow } from 'electron';
+import { TempUtil } from './fileaccessors/temp_util';
+import { SettingsManager } from './managers/settings_manager';
 
 export default class MainForm {
     private _win: BrowserWindow;
@@ -17,6 +19,10 @@ export default class MainForm {
                 contextIsolation: false,
             },
         });
+
+        // 오래된 캐시 삭제
+        const cacheExpires: number = SettingsManager.instance().getCacheExpires();
+        TempUtil.deleteOldCaches(cacheExpires);
     }
 
     public static instance() {
